@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Hongry</string>
+
+    <string name="appStartLabel">Are you hongry? What\'s your mood, dude?</string>
+    <string name="restaurantStartLabel">Looking for a new adventure or tried-and-true?</string>
+    <string name="eatInButton">Eat in!</string>
+    <string name="eatOutButton">Eat out!</string>
+    <string name="newAdventureButton">New Adventure</string>
+    <string name="favoritesButton">Tried-and-True</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_restaurant_start">Restaurant</string>
+    <string name="title_activity_search_resturants">Search Resturants</string>
+
+    <string name="hello_world">Hello world!</string>
+</resources>
