@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void eatOutGo(View view){
+    public void eatOutStart(View view){
         Intent intent = new Intent(this, RestaurantStart.class);
         startActivity(intent);
     }

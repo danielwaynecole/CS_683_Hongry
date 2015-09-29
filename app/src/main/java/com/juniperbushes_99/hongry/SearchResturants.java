@@ -4,13 +4,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.NumberPicker;
+import android.widget.NumberPicker.OnValueChangeListener;
 
 public class SearchResturants extends AppCompatActivity {
+
+    NumberPicker np;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_resturants);
+
+        String[] displayedValues = {"1 mile", "2 miles", "3 miles", "5 miles", "10 miles", "25 miles"};
+        np = (NumberPicker) findViewById(R.id.radiusPicker);
+        np.setMinValue(0);
+        np.setMaxValue(5);
+        np.setDisplayedValues(displayedValues);
+        np.setWrapSelectorWheel(false);
     }
 
     @Override
