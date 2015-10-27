@@ -8,7 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 public class RestaurantStart extends AppCompatActivity {
-
+    private int latitude;
+    private int longitude;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

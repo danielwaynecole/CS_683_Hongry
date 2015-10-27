@@ -41,4 +41,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, RestaurantStart.class);
         startActivity(intent);
     }
+
+    public void eatInStart(View view){
+        Intent intent = new Intent(this, RecipeStart.class);
+        startActivity(intent);
+    }
 }

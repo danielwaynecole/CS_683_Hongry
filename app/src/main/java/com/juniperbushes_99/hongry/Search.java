@@ -1,11 +1,11 @@
 package com.juniperbushes_99.hongry;
 
-import java.util.List;
+import android.os.AsyncTask;
 
 /**
  * Created by ucoleda on 9/23/15.
  */
-public abstract class Search<T> {
+public abstract class Search<T> extends AsyncTask {
     private String key;
 
     public abstract T search(String s);

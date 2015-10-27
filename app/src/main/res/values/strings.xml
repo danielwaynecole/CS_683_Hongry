@@ -1,15 +1,45 @@
 <resources>
+    <!-- Global -->
     <string name="app_name">Hongry</string>
+    <string name="newAdventureButton">New Adventure</string>
+    <string name="favoritesButton">Tried-and-True</string>
+    <string-array name="cuisine_list">
+        <item>Pizza</item>
+        <item>Mexican</item>
+        <item>Thai</item>
+        <item>Indian</item>
+    </string-array>
+    <string name="keywordLabel">Keyword(s)</string>
+    <string name="cuisineLabel">Cuisine</string>
+    <string name="radiusSelectLabel">Search Radius</string>
 
+    <!-- End Global -->
+
+    <!-- Main -->
     <string name="appStartLabel">Are you hongry? What\'s your mood, dude?</string>
     <string name="restaurantStartLabel">Looking for a new adventure or tried-and-true?</string>
     <string name="eatInButton">Eat in!</string>
     <string name="eatOutButton">Eat out!</string>
-    <string name="newAdventureButton">New Adventure</string>
-    <string name="favoritesButton">Tried-and-True</string>
+
     <string name="action_settings">Settings</string>
+    <!-- End Main -->
+
+    <!-- Start Restaurant -->
     <string name="title_activity_restaurant_start">Restaurant</string>
+
+    <!-- Search Restaurant -->
     <string name="title_activity_search_resturants">Search Resturants</string>
+    <string name="radiusPickerLabel">Search Radius</string>
+    <string name="searchRestaurantsButton">Find My Eats</string>
+    <string name="GPSAlertDialogTitle">GPS Alert</string>
+    <string name="GPSAlertDialogMessage">You must enable location services to use this feature.</string>
+    <string name="cancel">cancel</string>
+    <string name="title_activity_list_restaurants">ListRestaurants</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_recipe_start">RecipeStart</string>
+    <string name="title_activity_recipe_search">RecipeSearch</string>
+    <string name="title_activity_search_recipes">SearchRecipes</string>
+    <string name="title_activity_list_recipes">ListRecipes</string>
+    <!-- End Search Restaurant -->
 </resources>
