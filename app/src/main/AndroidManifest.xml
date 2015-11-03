@@ -48,6 +48,10 @@
             android:name=".ListRecipes"
             android:label="@string/title_activity_list_recipes" >
         </activity>
+        <activity
+            android:name=".RecipeDetails"
+            android:label="@string/title_activity_recipe_details" >
+        </activity>
     </application>
 
 </manifest>

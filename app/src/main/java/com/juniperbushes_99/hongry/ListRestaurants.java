@@ -14,23 +14,19 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ListRestaurants extends AppCompatActivity {
 
     private static final String TAG = "ListRestaurants";
     ListView listView;
-    ArrayList<String> listItems;
-    ArrayAdapter<String> adapter;
+    ArrayList<Recipe> listItems;
+    ArrayAdapter<Recipe> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_restaurants);
-
-        listView = (ListView) findViewById(R.id.restaurantList);
-        listItems = new ArrayList<String>();
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
-        listView.setAdapter(adapter);
 
         //Get the bundle
         Bundle bundle = getIntent().getExtras();
@@ -51,10 +47,20 @@ public class ListRestaurants extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            String name = jsonObject.optString("name").toString();
-            listItems.add(name);
-            adapter.notifyDataSetChanged();
+            HashMap<String, String> hmap = new HashMap<String, String>();
+            hmap.put("title", jsonObject.optString("name").toString());
+            hmap.put("id", jsonObject.optString("id").toString());
+
+            Recipe r = new Recipe(hmap);
+            listItems.add(r);
         }
+
+        listView = (ListView) findViewById(R.id.restaurantList);
+        listItems = new ArrayList<Recipe>();
+        adapter = new ArrayAdapter<Recipe>(this, android.R.layout.simple_list_item_1, listItems);
+        listView.setAdapter(adapter);
+
+
     }
 
     @Override

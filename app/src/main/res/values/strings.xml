@@ -16,7 +16,7 @@
     <!-- End Global -->
 
     <!-- Main -->
-    <string name="appStartLabel">Are you hongry? What\'s your mood, dude?</string>
+    <string name="appStartLabel">Are you hungry? What\'s your mood, dude?</string>
     <string name="restaurantStartLabel">Looking for a new adventure or tried-and-true?</string>
     <string name="eatInButton">Eat in!</string>
     <string name="eatOutButton">Eat out!</string>
@@ -41,5 +41,6 @@
     <string name="title_activity_recipe_search">RecipeSearch</string>
     <string name="title_activity_search_recipes">SearchRecipes</string>
     <string name="title_activity_list_recipes">ListRecipes</string>
+    <string name="title_activity_recipe_details">RecipeDetails</string>
     <!-- End Search Restaurant -->
 </resources>
