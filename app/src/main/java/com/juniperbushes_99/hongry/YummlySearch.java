@@ -25,22 +25,13 @@ import org.apache.http.impl.client.DefaultHttpClient;
 /**
  * Created by ucoleda on 9/23/15.
  */
-public class YummlySearch extends AsyncTask<ArrayList<String>, Void, String> {
+public class YummlySearch extends Search {
 
     private static final String TAG = "YelpSearch";
-    private int responseCode;
-    private String message;
-
-    private String response;
-
-    public YummlySearch(){
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-    }
 
     @Override
-    protected String doInBackground(ArrayList<String>... params) {
-        ArrayList<String> args = params[0];
+    protected String doInBackground(Object[] params) {
+        ArrayList<String> args = (ArrayList<String>) params[0];
         String keyword = args.get(0);
         String cuisine = args.get(1);
         String json = "";
@@ -76,125 +67,21 @@ public class YummlySearch extends AsyncTask<ArrayList<String>, Void, String> {
         }
         try {
             if (apiRequest.getResponseCode() == HttpURLConnection.HTTP_OK) {
-
                 InputStream inputStream = null; try {
-
                     inputStream = apiRequest.getInputStream();
-
                     json = processResult(inputStream);
-
                 }catch (IOException e) {
-
                     Log.i(TAG,e.getMessage());
-
                 }
-
                 finally {
-
                     if (inputStream != null) {
-
                         inputStream.close();
-
                     }
-
                 }
-
             }
         } catch (IOException e) {
             Log.i(TAG, e.getMessage());
         }
         return json;
-    }
-
-    public String getRecipeList(ArrayList<String>... params){
-        return "";
-    }
-
-    public String getRecipeDetails(String id){
-        String details = "";
-        String url = Constants.yummlyAPIEndPoint + "/api/recipe/" + id + "?_app_id="+Constants.yummlyAppID+"&_app_key="+Constants.yummlyKey;
-        HttpGet request = new HttpGet(url);
-        executeRequest(request, url);
-        return response;
-    }
-
-    private void executeRequest(HttpUriRequest request, String url)
-    {
-        HttpClient client = new DefaultHttpClient();
-
-        HttpResponse httpResponse;
-
-        try {
-            httpResponse = client.execute(request);
-            responseCode = httpResponse.getStatusLine().getStatusCode();
-            message = httpResponse.getStatusLine().getReasonPhrase();
-
-            HttpEntity entity = httpResponse.getEntity();
-
-            if (entity != null) {
-
-                InputStream instream = entity.getContent();
-                response = convertStreamToString(instream);
-
-                // Closing the input stream will trigger connection release
-                instream.close();
-            }
-
-        } catch (ClientProtocolException e)  {
-            client.getConnectionManager().shutdown();
-            e.printStackTrace();
-        } catch (IOException e) {
-            client.getConnectionManager().shutdown();
-            e.printStackTrace();
-        }
-    }
-
-    private static String convertStreamToString(InputStream is) {
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-
-        String line = null;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return sb.toString();
-    }
-
-
-    private String processResult(final InputStream inputStream) throws IOException {
-
-        final BufferedReader reader = new BufferedReader(new InputStreamReader( inputStream, Charset.forName("UTF-8")), 8192);
-
-        String line = "";
-        String json = "";
-        while ((line = reader.readLine()) != null) {
-            json += line;
-            Log.i(TAG, line);
-
-        }
-        return json;
-    }
-
-    public String getResponse() {
-        return response;
-    }
-
-    public String getErrorMessage() {
-        return message;
-    }
-
-    public int getResponseCode() {
-        return responseCode;
     }
 }

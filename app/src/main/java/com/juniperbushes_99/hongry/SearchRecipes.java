@@ -68,7 +68,7 @@ public class SearchRecipes extends AppCompatActivity {
         String c = cuisinePicker.getSelectedItem().toString();
         params.add(String.valueOf(c));
         try {
-            String json = new YummlySearch().execute(params).get();
+            String json = new YummlySearch().execute(params).get().toString();
             Intent i = new Intent(this, ListRecipes.class);
 
             //Create the bundle

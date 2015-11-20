@@ -1,0 +1,39 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.juniperbushes_99.hongry.RecipeDetailsButtons">
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/RecipeDetailsIngredientsButton"
+        android:id="@+id/RecipeDetailsIngredientsButton"
+        android:layout_above="@+id/ingredients"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/RecipeDetailsNutInfoButton"
+        android:layout_toStartOf="@+id/RecipeDetailsNutInfoButton" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/RecipeDetailsNutInfoButton"
+        android:id="@+id/RecipeDetailsNutInfoButton"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/RecipeDetailsDetailsButton"
+        android:layout_toStartOf="@+id/RecipeDetailsDetailsButton" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/RecipeDetailsDetailsButton"
+        android:id="@+id/RecipeDetailsDetailsButton"
+        android:layout_gravity="right|top"
+        android:singleLine="false"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

@@ -100,7 +100,7 @@ public class ListRecipes extends AppCompatActivity {
     }
 
     private void showRecipeDetails(String id){
-        Intent i = new Intent(this, RecipeDetails.class);
+        Intent i = new Intent(this, RecipeDetailsContainer.class);
 
         //Create the bundle
         Bundle bundle = new Bundle();

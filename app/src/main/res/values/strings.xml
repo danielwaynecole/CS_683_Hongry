@@ -43,4 +43,16 @@
     <string name="title_activity_list_recipes">ListRecipes</string>
     <string name="title_activity_recipe_details">RecipeDetails</string>
     <!-- End Search Restaurant -->
+
+    <!-- Recipe Details -->
+    <string name="RecipeDetailsIngredientsButton">Ingredients</string>
+    <string name="RecipeDetailsNutInfoButton">Nutrition</string>
+    <string name="RecipeDetailsDetailsButton">Details</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_recipe_details_container">RecipeDetailsContainer</string>
+    <!-- End Recipe Details -->
+
 </resources>

@@ -1,8 +1,9 @@
 package com.juniperbushes_99.hongry;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -10,19 +11,14 @@ import android.widget.ImageView;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Button;
 
-import java.net.URL;
 import java.io.InputStream;
 import java.util.ArrayList;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.entity.BufferedHttpEntity;
+import java.util.concurrent.ExecutionException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -40,22 +36,33 @@ public class RecipeDetails extends AppCompatActivity {
 
         ingredientListView = (ListView) findViewById(R.id.ingredients);
         ingredientListItems = new ArrayList<String>();
-
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);//Get the bundle
         Bundle bundle = getIntent().getExtras();
+
+        ArrayList<String> params = new ArrayList<String>();
 
         //Extract the data…
         String id = bundle.getString("recipeID");
-        YummlySearch ys = new YummlySearch();
-        String json = ys.getRecipeDetails(id);
+        // add keyword to params
+        params.add(id);
+        String json = null;
+        try {
+            json = new YummlyDetails().execute(params).get().toString();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
         JSONObject jsonRootObject = null;
         JSONObject imageObject = null;
+        JSONObject sourceObject = null;
+
         try {
             jsonRootObject = new JSONObject(json);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        // recipe image
         JSONArray jsonImageArray = jsonRootObject.optJSONArray("images");
         try {
             imageObject = jsonImageArray.getJSONObject(0);
@@ -65,28 +72,20 @@ public class RecipeDetails extends AppCompatActivity {
         String imageURL = imageObject.optString("hostedMediumUrl").toString();
         Log.i(TAG, "image url: "+imageURL+"\n");
         ImageView img = (ImageView) findViewById(R.id.recipeImage);
+        ArrayList<String> imageFetchParams = new ArrayList<String>();
+        imageFetchParams.add(imageURL);
+        Bitmap bitmap = null;
         try {
-            URL url = new URL(imageURL);
-            //try this url = "http://0.tqn.com/d/webclipart/1/0/5/l/4/floral-icon-5.jpg"
-            HttpGet httpRequest = null;
-
-            httpRequest = new HttpGet(url.toURI());
-
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpResponse response = (HttpResponse) httpclient
-                    .execute(httpRequest);
-
-            HttpEntity entity = response.getEntity();
-            BufferedHttpEntity b_entity = new BufferedHttpEntity(entity);
-            InputStream input = b_entity.getContent();
-
-            Bitmap bitmap = BitmapFactory.decodeStream(input);
-
+            InputStream input = new ImageFetch().execute(imageFetchParams).get();
+            bitmap = BitmapFactory.decodeStream(input);
             img.setImageBitmap(bitmap);
-
-        } catch (Exception ex) {
-
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
+
+        // build the ingredients listview
         JSONArray ingredients = jsonRootObject.optJSONArray("ingredientLines");
         String ingredientsString = "";
         for(int i=0; i < ingredients.length(); i++) {
@@ -98,9 +97,29 @@ public class RecipeDetails extends AppCompatActivity {
         }
         ingredientListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientListItems);
         ingredientListView.setAdapter(ingredientListAdapter);
+
+        // set the recipe title
         String title = jsonRootObject.optString("name");
         TextView titleElement = (TextView) findViewById(R.id.title);
         titleElement.setText(title);
+
+        // add onclick listener to directions button
+        // recipe image
+        try {
+            JSONObject jsonSourceObject = jsonRootObject.getJSONObject("source");
+            final String sourceURL = jsonSourceObject.optString("sourceRecipeUrl").toString();
+            Button directionsButton = (Button) findViewById(R.id.RecipeDetailsIngredientsButton);
+            directionsButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(sourceURL));
+                    startActivity(i);
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
