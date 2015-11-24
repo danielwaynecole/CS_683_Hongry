@@ -60,6 +60,14 @@
             android:name=".RecipeFavorites"
             android:label="@string/title_activity_recipe_favorites" >
         </activity>
+        <activity
+            android:name=".RestaurantDetails"
+            android:label="@string/title_activity_restaurant_details" >
+        </activity>
+        <activity
+            android:name=".RestaurantFavorites"
+            android:label="@string/title_activity_restaurant_favorites" >
+        </activity>
     </application>
 
 </manifest>

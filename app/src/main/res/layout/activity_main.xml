@@ -10,11 +10,15 @@
     <TextView android:text="@string/appStartLabel" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView"
-        android:textSize="40dp"
-        android:layout_marginTop="40dp"
-        android:layout_alignParentTop="true"
+        android:textSize="30dp"
+        android:paddingLeft="12dp"
+        android:layout_alignTop="@+id/imageView"
+        android:layout_toRightOf="@+id/imageView"
+        android:layout_above="@+id/eatOut"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:textAlignment="center"
+        android:paddingTop="40dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -22,11 +26,13 @@
         android:text="@string/eatInButton"
         android:id="@+id/eatIn"
         android:textSize="30dp"
-        android:layout_centerVertical="true"
+        android:textColor="#E6E0F8"
+        android:onClick="eatInStart"
+        android:layout_alignBottom="@+id/textSwitcher"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:textColor="#FF33CC"
-        android:onClick="eatInStart" />
+        android:background="#4C0B5F"
+        android:padding="14dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -34,13 +40,13 @@
         android:text="@string/eatOutButton"
         android:id="@+id/eatOut"
         android:textSize="30dp"
-        android:layout_alignTop="@+id/eatIn"
-        android:layout_alignRight="@+id/textView"
-        android:layout_alignEnd="@+id/textView"
-        android:layout_marginRight="35dp"
-        android:layout_marginEnd="35dp"
         android:textColor="#330099"
-        android:onClick="eatOutStart" />
+        android:onClick="eatOutStart"
+        android:background="#f8e0f7"
+        android:padding="14dp"
+        android:layout_centerVertical="true"
+        android:layout_alignRight="@+id/textView"
+        android:layout_alignEnd="@+id/textView" />
 
     <TextSwitcher
         android:layout_width="wrap_content"
@@ -51,5 +57,18 @@
         android:layout_alignParentStart="true"
         android:layout_marginLeft="74dp"
         android:layout_marginStart="74dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:src="@mipmap/pizza_ninja"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/eatIn"
+        android:layout_alignRight="@+id/eatIn"
+        android:layout_alignEnd="@+id/eatIn" />
+
 
 </RelativeLayout>

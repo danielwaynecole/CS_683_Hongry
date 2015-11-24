@@ -61,8 +61,13 @@
     <string name="title_activity_recipe_favorites">RecipeFavorites</string>
 
     <string name="delete">delete</string>
+    <string name="deleteRestaurantFaveConfirmTitle">Restaurant Delete</string>
+    <string name="deleteRestaurantFaveConfirm">Are you sure you want to remove this restaurant from your favorites?</string>
     <string name="deleteRecipeFaveConfirmTitle">Recipe Delete</string>
     <string name="deleteRecipeFaveConfirm">Are you sure you want to remove this recipe from your favorites?</string>
     <string name="confirmYes">yes</string>
     <string name="confirmNo">no</string>
+    <string name="title_activity_restaurant_details_container">RestaurantDetailsContainer</string>
+    <string name="title_activity_restaurant_details">RestaurantDetails</string>
+    <string name="title_activity_restaurant_favorites">RestaurantFavorites</string>
 </resources>

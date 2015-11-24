@@ -1,17 +1,19 @@
 package com.juniperbushes_99.hongry;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import android.util.Log;
-import android.widget.ListView;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.AdapterView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,13 +22,16 @@ public class ListRestaurants extends AppCompatActivity {
 
     private static final String TAG = "ListRestaurants";
     ListView listView;
-    ArrayList<Recipe> listItems;
-    ArrayAdapter<Recipe> adapter;
-
+    ArrayList<Restaurant> listItems;
+    ArrayAdapter<Restaurant> adapter;
+    JSONArray jsonArray;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_restaurants);
+
+        listView = (ListView) findViewById(R.id.restaurantList);
+        listItems = new ArrayList<Restaurant>();
 
         //Get the bundle
         Bundle bundle = getIntent().getExtras();
@@ -39,7 +44,7 @@ public class ListRestaurants extends AppCompatActivity {
         } catch (JSONException e) {
             Log.i(TAG, e.getMessage());
         }
-        JSONArray jsonArray = jsonRootObject.optJSONArray("businesses");
+        jsonArray = jsonRootObject.optJSONArray("businesses");
         for(int i=0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = null;
             try {
@@ -50,16 +55,24 @@ public class ListRestaurants extends AppCompatActivity {
             HashMap<String, String> hmap = new HashMap<String, String>();
             hmap.put("title", jsonObject.optString("name").toString());
             hmap.put("id", jsonObject.optString("id").toString());
-
-            Recipe r = new Recipe(hmap);
-            listItems.add(r);
+            hmap.put("json", jsonObject.toString());
+            Restaurant restaurant = new Restaurant(hmap);
+            Log.i(TAG, restaurant.getJson());
+            listItems.add(restaurant);
         }
 
-        listView = (ListView) findViewById(R.id.restaurantList);
-        listItems = new ArrayList<Recipe>();
-        adapter = new ArrayAdapter<Recipe>(this, android.R.layout.simple_list_item_1, listItems);
+        adapter = new ArrayAdapter<Restaurant>(this, android.R.layout.simple_list_item_1, listItems);
         listView.setAdapter(adapter);
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View v, int position,
+                                    long arg3) {
+                Restaurant restaurant = (Restaurant) adapter.getItemAtPosition(position);
+                showRestaurantDetails(restaurant.getJson());
+                // assuming string and if you want to get the value on click of list item
+                // do what you intend to do on click of listview row
+            }
+        });
 
     }
 
@@ -83,5 +96,21 @@ public class ListRestaurants extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showRestaurantDetails(String json){
+        Intent i = new Intent(this, RestaurantDetails.class);
+
+        //Create the bundle
+        Bundle bundle = new Bundle();
+
+        //Add your data to bundle
+        bundle.putString("json", json);
+
+        //Add the bundle to the intent
+        i.putExtras(bundle);
+
+        //Fire that second activity
+        startActivity(i);
     }
 }

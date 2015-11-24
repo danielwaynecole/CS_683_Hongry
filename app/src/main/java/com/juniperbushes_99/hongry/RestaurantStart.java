@@ -42,4 +42,9 @@ public class RestaurantStart extends AppCompatActivity {
         Intent intent = new Intent(this, SearchResturants.class);
         startActivity(intent);
     }
+
+    public void eatOutFavoritesStart(View view){
+        Intent intent = new Intent(this, RestaurantFavorites.class);
+        startActivity(intent);
+    }
 }
