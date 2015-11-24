@@ -55,4 +55,14 @@
     <string name="title_activity_recipe_details_container">RecipeDetailsContainer</string>
     <!-- End Recipe Details -->
 
+    <!-- Font Awesome -->
+    <string name="fa_heart_icon">&#xf004; Add to Favorites</string>
+    <string name="already_in_favorites">&#xf004; You LOVE this!</string>
+    <string name="title_activity_recipe_favorites">RecipeFavorites</string>
+
+    <string name="delete">delete</string>
+    <string name="deleteRecipeFaveConfirmTitle">Recipe Delete</string>
+    <string name="deleteRecipeFaveConfirm">Are you sure you want to remove this recipe from your favorites?</string>
+    <string name="confirmYes">yes</string>
+    <string name="confirmNo">no</string>
 </resources>

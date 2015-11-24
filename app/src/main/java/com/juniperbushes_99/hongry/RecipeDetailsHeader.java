@@ -1,19 +1,33 @@
 package com.juniperbushes_99.hongry;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -34,6 +48,7 @@ public class RecipeDetailsHeader extends Fragment {
     private static final String TITLE = "title";
     private static final String SERVING_INFO = "servingInfo";
     private static final String ID = "id";
+    private static final String ISFAVE = "isFave";
 
 
     // TODO: Rename and change types of parameters
@@ -41,6 +56,7 @@ public class RecipeDetailsHeader extends Fragment {
     private String imageURL;
     private String id;
     private String servingInfo;
+    private boolean isFave;
 
     private OnFragmentInteractionListener mListener;
 
@@ -53,13 +69,14 @@ public class RecipeDetailsHeader extends Fragment {
      * @return A new instance of fragment RecipeDetailsHeader.
      */
     // TODO: Rename and change types and number of parameters
-    public static RecipeDetailsHeader newInstance(String id, String imageURL, String title, String servingInfo) {
+    public static RecipeDetailsHeader newInstance(String id, String imageURL, String title, String servingInfo, boolean isFave) {
         RecipeDetailsHeader fragment = new RecipeDetailsHeader();
         Bundle args = new Bundle();
         args.putString(IMAGE_URL, imageURL);
         args.putString(TITLE, title);
         args.putString(SERVING_INFO, servingInfo);
         args.putString(ID, id);
+        args.putBoolean(ISFAVE, isFave);
         fragment.setArguments(args);
         return fragment;
     }
@@ -76,6 +93,7 @@ public class RecipeDetailsHeader extends Fragment {
             title = getArguments().getString(TITLE);
             servingInfo = getArguments().getString(SERVING_INFO);
             imageURL = getArguments().getString(IMAGE_URL);
+            isFave = getArguments().getBoolean(ISFAVE);
         }
     }
 
@@ -84,6 +102,27 @@ public class RecipeDetailsHeader extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View inf = inflater.inflate(R.layout.fragment_recipe_details_header, container, false);
+        TextView faveTextView = (TextView) inf.findViewById(R.id.fa_heart_icon);
+        //Select TextView we want to change the Font
+        Typeface font = Typeface.createFromAsset(inf.getContext().getAssets(), "fontawesome-webfont.ttf");
+        //Set the typeface
+        faveTextView.setTypeface(font);
+        final TextView addToFavorites = (TextView) inf.findViewById(R.id.fa_heart_icon);
+        if(!isFave) {
+            addToFavorites.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    try {
+                        addToFavorites();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+            faveTextView.setText(R.string.already_in_favorites);
+            faveTextView.setTextColor(Color.parseColor("#B00000"));
+        }
+
 
         // add image to header
         Log.i(TAG, "image url: " + imageURL + "\n");
@@ -106,13 +145,6 @@ public class RecipeDetailsHeader extends Fragment {
         titleElement.setText(title);
 
         return inf;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -144,7 +176,52 @@ public class RecipeDetailsHeader extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        public void onFragmentInteraction(String s);
     }
 
+    private void addToFavorites() throws JSONException {
+        // show toast
+        Toast.makeText(getActivity().getApplicationContext(), "Saving to favorites...", Toast.LENGTH_LONG).show();
+
+        String FILENAME = "recipe_favorites";
+        StringBuilder json = new StringBuilder();
+        JSONArray jA = new JSONArray();
+        try {
+            FileInputStream fis =  getActivity().openFileInput(FILENAME);
+            InputStreamReader inputStreamReader = new InputStreamReader(fis);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                json.append(line);
+            }
+            fis.close();
+            JSONObject jO = new JSONObject(json.toString());
+            jA = jO.getJSONArray("favorites");
+        } catch (FileNotFoundException e) {
+            // do nothing
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // add new favorite
+        JSONObject newFave = new JSONObject();
+        newFave.put("id", id);
+        newFave.put("title", title);
+        jA.put(newFave);
+
+        // recreate json
+        JSONObject newJO = new JSONObject();
+        newJO.put("favorites", jA);
+        Log.i(TAG, JSONObject.quote(newJO.toString()));
+        FileOutputStream fos;
+        try {
+            fos =  getActivity().openFileOutput(FILENAME, Context.MODE_PRIVATE);
+            fos.write(newJO.toString().getBytes());
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

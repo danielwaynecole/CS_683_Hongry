@@ -4,24 +4,44 @@
     tools:context="com.juniperbushes_99.hongry.RecipeDetailsHeader">
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:id="@+id/recipeImage"
+        android:layout_gravity="top"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/title"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/title" />
-
-    <TextView
-        android:layout_width="217dp"
-        android:layout_height="106dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/title"
-        android:padding="8dp"
-        android:layout_gravity="center_horizontal|top"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="false"
+        android:scaleType="fitStart" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/recipeImage"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/recipeImage"
+        android:layout_toEndOf="@+id/recipeImage"
+        android:id="@+id/linearLayout"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:padding="8dp"
+            android:text="@string/fa_heart_icon"
+            android:id="@+id/fa_heart_icon"
+            android:layout_centerVertical="true"
+            android:textAlignment="center" />
+
+        <TextView
+            android:layout_width="189dp"
+            android:layout_height="98dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/title"
+            android:padding="8dp"
+            android:layout_gravity="center_horizontal|top"
+            android:textAlignment="center" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

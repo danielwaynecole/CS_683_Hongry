@@ -14,10 +14,10 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/recipeDetailsButtonsFragment" />
-    <fragment
+        android:layout_above="@+id/recipeDetailsButtonsFragmentContainer" />
+    <RelativeLayout
         android:name="com.juniperbushes_99.hongry.RecipeDetailsButtons"
-        android:id="@+id/recipeDetailsButtonsFragment"
+        android:id="@+id/recipeDetailsButtonsFragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         tools:layout="@layout/fragment_recipe_details_buttons"
@@ -32,7 +32,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/recipeDetailsButtonsFragment">
+        android:layout_below="@+id/recipeDetailsButtonsFragmentContainer">
 
     </RelativeLayout>
 </RelativeLayout>

@@ -56,6 +56,10 @@
             android:name=".RecipeDetailsContainer"
             android:label="@string/title_activity_recipe_details_container" >
         </activity>
+        <activity
+            android:name=".RecipeFavorites"
+            android:label="@string/title_activity_recipe_favorites" >
+        </activity>
     </application>
 
 </manifest>

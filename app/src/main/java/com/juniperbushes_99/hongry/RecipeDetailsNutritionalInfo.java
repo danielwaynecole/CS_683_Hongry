@@ -1,12 +1,22 @@
 package com.juniperbushes_99.hongry;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 
 /**
@@ -20,12 +30,12 @@ import android.view.ViewGroup;
 public class RecipeDetailsNutritionalInfo extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "RECIPE_DETAILS_INGR";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    ListView nutritionListView;
+    ArrayList<String> nutritionListItems;
+    ArrayAdapter<String> nutritionListAdapter;
+    private JSONArray nutrtionalInfo;
 
     private OnFragmentInteractionListener mListener;
 
@@ -33,17 +43,13 @@ public class RecipeDetailsNutritionalInfo extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param nutrtionalInfo Parameter 1.
      * @return A new instance of fragment RecipeDetailsNutritionalInfo.
      */
     // TODO: Rename and change types and number of parameters
-    public static RecipeDetailsNutritionalInfo newInstance(String param1, String param2) {
+    public static RecipeDetailsNutritionalInfo newInstance(JSONArray nutrtionalInfo) {
         RecipeDetailsNutritionalInfo fragment = new RecipeDetailsNutritionalInfo();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+        fragment.setNutrtionalInfo(nutrtionalInfo);
         return fragment;
     }
 
@@ -54,24 +60,48 @@ public class RecipeDetailsNutritionalInfo extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_recipe_details_nutritional_info, container, false);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+        View inf = inflater.inflate(R.layout.fragment_recipe_details_ingredients, container, false);
+        // build the ingredients listview
+        nutritionListView = (ListView) inf.findViewById(R.id.RecipeIngredients);
+        //ingredientListView = (ListView) getView().findViewById(R.id.RecipeIngredients);
+        nutritionListItems = new ArrayList<String>();
+        Boolean hasNutritionalInfo = false;
+        String infoString = "";
+        for(int i=0; i < nutrtionalInfo.length(); i++) {
+            infoString = "";
+            JSONObject unit = null;
+            String unitString = "";
+            JSONObject info = null;
+            try {
+                info = nutrtionalInfo.getJSONObject(i);
+                unit = info.getJSONObject("unit");
+                if(Float.parseFloat(info.optString("value")) == 1){
+                    unitString = unit.optString("name");
+                } else {
+                    unitString = unit.optString("plural");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if(!(info.isNull("description"))){
+                hasNutritionalInfo = true;
+                infoString += info.optString("description").toString() + ": " + info.optString("value").toString() + " " + unitString;
+                nutritionListItems.add(infoString);
+            }
         }
+        if(!hasNutritionalInfo){
+            infoString += "No Nutritional Information Available";
+            nutritionListItems.add(infoString);
+        }
+        nutritionListAdapter = new ArrayAdapter<String>(inf.getContext(), android.R.layout.simple_list_item_1, nutritionListItems);
+        nutritionListView.setAdapter(nutritionListAdapter);
+        return inf;
     }
 
     @Override
@@ -91,6 +121,14 @@ public class RecipeDetailsNutritionalInfo extends Fragment {
         mListener = null;
     }
 
+    public JSONArray getNutrtionalInfo() {
+        return nutrtionalInfo;
+    }
+
+    public void setNutrtionalInfo(JSONArray nutrtionalInfo) {
+        this.nutrtionalInfo = nutrtionalInfo;
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -103,7 +141,7 @@ public class RecipeDetailsNutritionalInfo extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        public void onFragmentInteraction(String s);
     }
 
 }

@@ -41,4 +41,9 @@ public class RecipeStart extends AppCompatActivity {
         Intent intent = new Intent(this, SearchRecipes.class);
         startActivity(intent);
     }
+
+    public void eatInFavoritesStart(View view){
+        Intent intent = new Intent(this, RecipeFavorites.class);
+        startActivity(intent);
+    }
 }
