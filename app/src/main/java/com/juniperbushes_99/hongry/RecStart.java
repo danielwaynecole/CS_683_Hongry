@@ -1,8 +1,6 @@
 package com.juniperbushes_99.hongry;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,16 +12,13 @@ import android.widget.Button;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link RecipeDetailsButtons.OnFragmentInteractionListener} interface
+ * {@link RecStart.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link RecipeDetailsButtons#newInstance} factory method to
+ * Use the {@link RecStart#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RecipeDetailsButtons extends Fragment {
+public class RecStart extends Fragment {
 
-    private String sourceURL;
-    private String ingredientsJSON;
-    private String nutritionalJSON;
 
     private OnFragmentInteractionListener mListener;
 
@@ -31,19 +26,15 @@ public class RecipeDetailsButtons extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param sourceURL Parameter 1.
-     * @return A new instance of fragment RecipeDetailsButtons.
+     * @return A new instance of fragment RecStart.
      */
-    // TODO: Rename and change types and number of parameters
-    public static RecipeDetailsButtons newInstance(String sourceURL, String ingredientsJSON, String nutritionalJSON) {
-        RecipeDetailsButtons fragment = new RecipeDetailsButtons();
-        fragment.ingredientsJSON = ingredientsJSON;
-        fragment.nutritionalJSON = nutritionalJSON;
-        fragment.sourceURL = sourceURL;
+    //
+    public static RecStart newInstance() {
+        RecStart fragment = new RecStart();
         return fragment;
     }
 
-    public RecipeDetailsButtons() {
+    public RecStart() {
         // Required empty public constructor
     }
 
@@ -56,34 +47,20 @@ public class RecipeDetailsButtons extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View inf = inflater.inflate(R.layout.fragment_recipe_details_buttons, container, false);
-
+        View inf = inflater.inflate(R.layout.fragment_rec_start, container, false);
         // details button click interface with activity
-        final Button recipeDetailsDetailsButton = (Button) inf.findViewById(R.id.RecipeDetailsDetailsButton);
-        recipeDetailsDetailsButton.setOnClickListener(new View.OnClickListener() {
+        final Button eatInSearchStartButton = (Button) inf.findViewById(R.id.newAdventureButton);
+        eatInSearchStartButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(sourceURL));
-                startActivity(i);
+                eatInSearchStart();
             }
         });
-
-        // details button click interface with activity
-        final Button recipeDetailsIngredientsButton = (Button) inf.findViewById(R.id.RecipeDetailsIngredientsButton);
-        recipeDetailsIngredientsButton.setOnClickListener(new View.OnClickListener() {
+        final Button eatInFavoritesStartButton = (Button) inf.findViewById(R.id.favoritesButton);
+        eatInFavoritesStartButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                mListener.onFragmentInteraction("ingredients", ingredientsJSON);
+                eatInFavoritesStart();
             }
         });
-
-        // details button click interface with activity
-        final Button recipeDetailsNutInfoButton = (Button) inf.findViewById(R.id.RecipeDetailsNutInfoButton);
-        recipeDetailsNutInfoButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                mListener.onFragmentInteraction("nutinfo", nutritionalJSON);
-            }
-        });
-
         return inf;
     }
 
@@ -102,6 +79,15 @@ public class RecipeDetailsButtons extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+
+    public void eatInSearchStart(){
+        mListener.onFragmentInteraction("recNew", null);
+    }
+
+    public void eatInFavoritesStart(){
+        mListener.onFragmentInteraction("recFaves", null);
     }
 
     /**

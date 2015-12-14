@@ -26,6 +26,11 @@
 
     <!-- Start Restaurant -->
     <string name="title_activity_restaurant_start">Restaurant</string>
+    <string name="eatOutStartTitle">New Restaurant Adventure</string>
+
+    <!-- Start Recipe -->
+    <string name="eatInStartTitle">New Recipe Adventure</string>
+
 
     <!-- Search Restaurant -->
     <string name="title_activity_search_resturants">Search Resturants</string>
@@ -35,13 +40,9 @@
     <string name="GPSAlertDialogMessage">You must enable location services to use this feature.</string>
     <string name="cancel">cancel</string>
     <string name="title_activity_list_restaurants">ListRestaurants</string>
+    <string name="addressLabel">Address</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_recipe_start">RecipeStart</string>
-    <string name="title_activity_recipe_search">RecipeSearch</string>
-    <string name="title_activity_search_recipes">SearchRecipes</string>
-    <string name="title_activity_list_recipes">ListRecipes</string>
-    <string name="title_activity_recipe_details">RecipeDetails</string>
     <!-- End Search Restaurant -->
 
     <!-- Recipe Details -->
@@ -49,11 +50,12 @@
     <string name="RecipeDetailsNutInfoButton">Nutrition</string>
     <string name="RecipeDetailsDetailsButton">Details</string>
 
-
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_recipe_details_container">RecipeDetailsContainer</string>
     <!-- End Recipe Details -->
+
+    <!--Restaurant Map -->
+    <string name="restMapTitle">Restaurant Location</string>
 
     <!-- Font Awesome -->
     <string name="fa_heart_icon">&#xf004; Add to Favorites</string>
@@ -70,4 +72,21 @@
     <string name="title_activity_restaurant_details_container">RestaurantDetailsContainer</string>
     <string name="title_activity_restaurant_details">RestaurantDetails</string>
     <string name="title_activity_restaurant_favorites">RestaurantFavorites</string>
+
+    <!-- nav menu -->
+    <string name="recFaveNav">Fave Recipes</string>
+    <string name="restFaveNav">Fave Restaurants</string>
+    <string name="recNewNav">New Recipe</string>
+    <string name="restNewNav">New Restaurant</string>
+    <string name="homeTitle">Hungry Home</string>
+    <string name="restListTitle">Restaurant Search Results</string>
+    <string name="restDetailsTitle">Restaurant Details</string>
+    <string name="recListTitle">Recipe Search Results</string>
+    <string name="recDetailsTitle">Recipe Details</string>
+    <string name="drawer_open">Hamburger Menu Open</string>
+    <string name="drawer_closed">Hamburger Menu Closed</string>
+    <string name="menuHeaderText">It\'s about the destination, not the journey</string>
+    <string name="title_activity_maps">Map</string>
+
+
 </resources>

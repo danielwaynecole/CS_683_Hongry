@@ -43,13 +43,18 @@ public class RecipeDetailsNutritionalInfo extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param nutrtionalInfo Parameter 1.
+     * @param nutritionalInfo String
      * @return A new instance of fragment RecipeDetailsNutritionalInfo.
      */
     // TODO: Rename and change types and number of parameters
-    public static RecipeDetailsNutritionalInfo newInstance(JSONArray nutrtionalInfo) {
+    public static RecipeDetailsNutritionalInfo newInstance(String nutritionalInfo) {
         RecipeDetailsNutritionalInfo fragment = new RecipeDetailsNutritionalInfo();
-        fragment.setNutrtionalInfo(nutrtionalInfo);
+        try {
+            JSONArray jNutritionalInfo = new JSONArray(nutritionalInfo);
+            fragment.setNutrtionalInfo(jNutritionalInfo);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return fragment;
     }
 
@@ -60,6 +65,17 @@ public class RecipeDetailsNutritionalInfo extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getArguments() != null) {
+            Bundle b = getArguments();
+            String json = b.getString("nutritionList");
+            String niS = json;
+            try {
+                JSONArray jNutritionalInfo = new JSONArray(niS);
+                setNutrtionalInfo(jNutritionalInfo);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -141,7 +157,7 @@ public class RecipeDetailsNutritionalInfo extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String s);
+        public void onFragmentInteraction(String s, String d);
     }
 
 }

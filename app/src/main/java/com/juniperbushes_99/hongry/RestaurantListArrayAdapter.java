@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,10 +34,12 @@ import java.util.ArrayList;
 
 public class RestaurantListArrayAdapter extends ArrayAdapter<Restaurant> {
     private ArrayList<Restaurant> restaurants;
+    private RestFaveStart.OnFragmentInteractionListener mListener;
 
-    public RestaurantListArrayAdapter(Context context, int textViewResourceId, ArrayList<Restaurant> restaurants) {
+    public RestaurantListArrayAdapter(Context context, int textViewResourceId, ArrayList<Restaurant> restaurants, RestFaveStart.OnFragmentInteractionListener mListener) {
         super(context, textViewResourceId, restaurants);
         this.restaurants = restaurants;
+        this.mListener = mListener;
     }
 
     @Override
@@ -77,19 +78,7 @@ public class RestaurantListArrayAdapter extends ArrayAdapter<Restaurant> {
     }
 
     private void showRestaurantDetails(String json){
-        Intent i = new Intent(getContext(), RestaurantDetails.class);
-
-        //Create the bundle
-        Bundle bundle = new Bundle();
-
-        //Add your data to bundle
-        bundle.putString("json", json);
-
-        //Add the bundle to the intent
-        i.putExtras(bundle);
-
-        //Fire that second activity
-        getContext().startActivity(i);
+        mListener.onFragmentInteraction("restDetails", json);
     }
 
     private void deleteFavorite(int position){

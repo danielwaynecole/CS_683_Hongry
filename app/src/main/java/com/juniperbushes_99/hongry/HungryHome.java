@@ -1,8 +1,6 @@
 package com.juniperbushes_99.hongry;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,20 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link RecipeDetailsButtons.OnFragmentInteractionListener} interface
+ * {@link HungryHome.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link RecipeDetailsButtons#newInstance} factory method to
+ * Use the {@link HungryHome#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RecipeDetailsButtons extends Fragment {
-
-    private String sourceURL;
-    private String ingredientsJSON;
-    private String nutritionalJSON;
+public class HungryHome extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
@@ -31,59 +24,41 @@ public class RecipeDetailsButtons extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param sourceURL Parameter 1.
-     * @return A new instance of fragment RecipeDetailsButtons.
+     * @return A new instance of fragment HungryHome.
      */
-    // TODO: Rename and change types and number of parameters
-    public static RecipeDetailsButtons newInstance(String sourceURL, String ingredientsJSON, String nutritionalJSON) {
-        RecipeDetailsButtons fragment = new RecipeDetailsButtons();
-        fragment.ingredientsJSON = ingredientsJSON;
-        fragment.nutritionalJSON = nutritionalJSON;
-        fragment.sourceURL = sourceURL;
+    public static HungryHome newInstance() {
+        HungryHome fragment = new HungryHome();
         return fragment;
     }
 
-    public RecipeDetailsButtons() {
+    public HungryHome() {
         // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View inf = inflater.inflate(R.layout.fragment_recipe_details_buttons, container, false);
-
+        View inf =  inflater.inflate(R.layout.fragment_hungry_home, container, false);
         // details button click interface with activity
-        final Button recipeDetailsDetailsButton = (Button) inf.findViewById(R.id.RecipeDetailsDetailsButton);
-        recipeDetailsDetailsButton.setOnClickListener(new View.OnClickListener() {
+        final Button eatInButton = (Button) inf.findViewById(R.id.eatIn);
+        eatInButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(sourceURL));
-                startActivity(i);
+                eatInStart();
             }
         });
-
-        // details button click interface with activity
-        final Button recipeDetailsIngredientsButton = (Button) inf.findViewById(R.id.RecipeDetailsIngredientsButton);
-        recipeDetailsIngredientsButton.setOnClickListener(new View.OnClickListener() {
+        final Button eatOutButton = (Button) inf.findViewById(R.id.eatOut);
+        eatOutButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                mListener.onFragmentInteraction("ingredients", ingredientsJSON);
+                eatOutStart();
             }
         });
-
-        // details button click interface with activity
-        final Button recipeDetailsNutInfoButton = (Button) inf.findViewById(R.id.RecipeDetailsNutInfoButton);
-        recipeDetailsNutInfoButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                mListener.onFragmentInteraction("nutinfo", nutritionalJSON);
-            }
-        });
-
         return inf;
     }
 
@@ -104,6 +79,14 @@ public class RecipeDetailsButtons extends Fragment {
         mListener = null;
     }
 
+    private void eatInStart(){
+        mListener.onFragmentInteraction("eatInStart", null);
+    }
+
+    private void eatOutStart(){
+        mListener.onFragmentInteraction("eatOutStart", null);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -118,5 +101,4 @@ public class RecipeDetailsButtons extends Fragment {
         // TODO: Update argument type and name
         public void onFragmentInteraction(String s, String d);
     }
-
 }

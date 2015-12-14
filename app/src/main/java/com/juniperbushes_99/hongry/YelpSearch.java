@@ -4,12 +4,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -32,10 +38,34 @@ public class YelpSearch extends AsyncTask<ArrayList<String>, Void, String> {
     protected String doInBackground(ArrayList<String>... params) {
         ArrayList<String> args = params[0];
         String keyword = args.get(0);
-        double radiusInMeters = Integer.parseInt(args.get(1)) * 1609.344;
-        double radius = (radiusInMeters > 40000) ? 40000 : radiusInMeters;
-        double latitude = Double.parseDouble(args.get(2));
-        double longitude = Double.parseDouble(args.get(3));
+        String location = args.get(4);
+        String queryString = null;
+        try {
+            queryString = "search?term=" + URLEncoder.encode(keyword, Charset.forName("UTF-8").name());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        try {
+            double radiusInMeters = Integer.parseInt(args.get(1)) * 1609.344;
+            double radius = (radiusInMeters > 40000) ? 40000 : radiusInMeters;
+            double latitude = Double.parseDouble(args.get(2));
+            double longitude = Double.parseDouble(args.get(3));
+            if(!(latitude == 0 && longitude == 0)) {
+                queryString += "&ll=" + latitude + "," + longitude + "&radius_filter=" + radius;
+            } else {
+                try {
+                    queryString += "&location=" + URLEncoder.encode(location, Charset.forName("UTF-8").name());
+                } catch (UnsupportedEncodingException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        } catch(NumberFormatException e){
+            try {
+                queryString += "&location=" + URLEncoder.encode(location, Charset.forName("UTF-8").name());
+            } catch (UnsupportedEncodingException e1) {
+                e1.printStackTrace();
+            }
+        }
         String json = "";
 
         List<Restaurant> restaurants = new ArrayList<Restaurant>();
@@ -44,8 +74,9 @@ public class YelpSearch extends AsyncTask<ArrayList<String>, Void, String> {
         OAuthConsumer consumer = new DefaultOAuthConsumer(Constants.yelpKey,
                 Constants.yelpSecret);
         consumer.setTokenWithSecret(Constants.yelpToken, Constants.yelpTokenSecret);
+
         // create an HTTP request to a protected resource
-        String urlString = Constants.yelpAPIEndPoint + "search?term=" + keyword + "&ll=" + latitude + "," + longitude + "&radius_filter=" + radius;
+        String urlString = Constants.yelpAPIEndPoint + queryString;
         Log.i(TAG, urlString);
         URL url = null;
         try {

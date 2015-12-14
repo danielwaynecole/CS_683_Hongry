@@ -2,48 +2,45 @@ package com.juniperbushes_99.hongry;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link RecipeDetailsButtons.OnFragmentInteractionListener} interface
+ * {@link RecNewStart.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link RecipeDetailsButtons#newInstance} factory method to
+ * Use the {@link RecNewStart#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RecipeDetailsButtons extends Fragment {
+public class RecNewStart extends Fragment {
 
-    private String sourceURL;
-    private String ingredientsJSON;
-    private String nutritionalJSON;
-
+    View view;
     private OnFragmentInteractionListener mListener;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param sourceURL Parameter 1.
-     * @return A new instance of fragment RecipeDetailsButtons.
+     * @return A new instance of fragment RecNewStart.
      */
-    // TODO: Rename and change types and number of parameters
-    public static RecipeDetailsButtons newInstance(String sourceURL, String ingredientsJSON, String nutritionalJSON) {
-        RecipeDetailsButtons fragment = new RecipeDetailsButtons();
-        fragment.ingredientsJSON = ingredientsJSON;
-        fragment.nutritionalJSON = nutritionalJSON;
-        fragment.sourceURL = sourceURL;
+    public static RecNewStart newInstance() {
+        RecNewStart fragment = new RecNewStart();
         return fragment;
     }
 
-    public RecipeDetailsButtons() {
+    public RecNewStart() {
         // Required empty public constructor
     }
 
@@ -56,35 +53,47 @@ public class RecipeDetailsButtons extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View inf = inflater.inflate(R.layout.fragment_recipe_details_buttons, container, false);
-
-        // details button click interface with activity
-        final Button recipeDetailsDetailsButton = (Button) inf.findViewById(R.id.RecipeDetailsDetailsButton);
-        recipeDetailsDetailsButton.setOnClickListener(new View.OnClickListener() {
+        View inf = inflater.inflate(R.layout.fragment_rec_new_start, container, false);
+        Spinner spinner = (Spinner) inf.findViewById(R.id.cuisineSpinner);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(inf.getContext(), android.R.layout.simple_spinner_item, android.R.id.text1);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerAdapter);
+        for(int i = 0; i < Constants.yummlyCuisines.length; i++){
+            String cuisine = Constants.yummlyCuisines[i];
+            spinnerAdapter.add(cuisine);
+        }
+        spinnerAdapter.notifyDataSetChanged();
+        final Button eatOutButton = (Button) inf.findViewById(R.id.searchRecipeGo);
+        eatOutButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(sourceURL));
-                startActivity(i);
+                searchRecipesGo();
             }
         });
-
-        // details button click interface with activity
-        final Button recipeDetailsIngredientsButton = (Button) inf.findViewById(R.id.RecipeDetailsIngredientsButton);
-        recipeDetailsIngredientsButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                mListener.onFragmentInteraction("ingredients", ingredientsJSON);
-            }
-        });
-
-        // details button click interface with activity
-        final Button recipeDetailsNutInfoButton = (Button) inf.findViewById(R.id.RecipeDetailsNutInfoButton);
-        recipeDetailsNutInfoButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                mListener.onFragmentInteraction("nutinfo", nutritionalJSON);
-            }
-        });
-
+        view = inf;
         return inf;
+    }
+
+    public void searchRecipesGo(){
+        EditText keyword = (EditText) view.findViewById(R.id.recipeKeyword);
+
+        ArrayList<String> params = new ArrayList<String>();
+
+        // add keyword to params
+        String k = keyword.getText().toString();
+        params.add(k);
+
+        // add search radius
+        Spinner cuisinePicker = (Spinner) view.findViewById(R.id.cuisineSpinner);
+        String c = cuisinePicker.getSelectedItem().toString();
+        params.add(String.valueOf(c));
+        try {
+            String json = new YummlySearch().execute(params).get().toString();
+            mListener.onFragmentInteraction("recipeList", json);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

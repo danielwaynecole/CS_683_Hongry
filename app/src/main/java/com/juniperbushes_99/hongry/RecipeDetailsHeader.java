@@ -176,7 +176,7 @@ public class RecipeDetailsHeader extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String s);
+        public void onFragmentInteraction(String s, String d);
     }
 
     private void addToFavorites() throws JSONException {

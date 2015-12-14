@@ -46,9 +46,15 @@ public class RecipeDetailsIngredients extends Fragment {
      * @return A new instance of fragment RecipeDetailsIngredients.
      */
     // TODO: Rename and change types and number of parameters
-    public static RecipeDetailsIngredients newInstance(JSONArray ingredients) {
+    public static RecipeDetailsIngredients newInstance(String ingredients) {
+        Log.i(TAG, "initial stuff " + ingredients);
         RecipeDetailsIngredients fragment = new RecipeDetailsIngredients();
-        fragment.setIngredients(ingredients);
+        try {
+            JSONArray jIngredients = new JSONArray(ingredients);
+            fragment.setIngredients(jIngredients);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return fragment;
     }
 
@@ -59,8 +65,18 @@ public class RecipeDetailsIngredients extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getArguments() != null) {
+            Bundle b = getArguments();
+            String json = b.getString("ingredientList");
+            String iS = json;
+            try {
+                JSONArray jIngredients = new JSONArray(iS);
+                setIngredients(jIngredients);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
         Log.i(TAG, "onCreate called" + "\n");
-
     }
 
 
@@ -73,6 +89,7 @@ public class RecipeDetailsIngredients extends Fragment {
         //ingredientListView = (ListView) getView().findViewById(R.id.RecipeIngredients);
         ingredientListItems = new ArrayList<String>();
         String ingredientsString = "";
+        Log.i(TAG, "seriously..." + ingredients.toString() + "\n");
         for(int i=0; i < ingredients.length(); i++) {
             try {
                 ingredientListItems.add(ingredients.getString(i));
@@ -124,7 +141,7 @@ public class RecipeDetailsIngredients extends Fragment {
      */
      public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String s);
+        public void onFragmentInteraction(String s, String d);
     }
 
     @Override

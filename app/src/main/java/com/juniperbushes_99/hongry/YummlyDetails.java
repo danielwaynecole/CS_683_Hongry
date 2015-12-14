@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Created by ucoleda on 11/3/15.
  */
-public class YummlyDetails extends Search{
+public class YummlyDetails extends Search {
     @Override
     protected Object doInBackground(Object[] params) {
         ArrayList<String> args = (ArrayList<String>) params[0];

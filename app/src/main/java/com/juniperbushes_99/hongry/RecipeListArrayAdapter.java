@@ -6,8 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +35,10 @@ import java.util.ArrayList;
 
 public class RecipeListArrayAdapter extends ArrayAdapter<Recipe> {
     private ArrayList<Recipe> recipes;
-
-    public RecipeListArrayAdapter(Context context, int textViewResourceId, ArrayList<Recipe> recipes) {
+    private RecFaveStart.OnFragmentInteractionListener mListener;
+    public RecipeListArrayAdapter(Context context, int textViewResourceId, ArrayList<Recipe> recipes, RecFaveStart.OnFragmentInteractionListener mListener) {
         super(context, textViewResourceId, recipes);
+        this.mListener = mListener;
         this.recipes = recipes;
     }
 
@@ -77,19 +78,8 @@ public class RecipeListArrayAdapter extends ArrayAdapter<Recipe> {
     }
 
     private void showRecipeDetails(String id){
-        Intent i = new Intent(getContext(), RecipeDetailsContainer.class);
-
-        //Create the bundle
-        Bundle bundle = new Bundle();
-
-        //Add your data to bundle
-        bundle.putString("recipeID", id);
-
-        //Add the bundle to the intent
-        i.putExtras(bundle);
-
-        //Fire that second activity
-        getContext().startActivity(i);
+        // load details
+        mListener.onFragmentInteraction("recDetails", id);
     }
 
     private void deleteFavorite(int position){
