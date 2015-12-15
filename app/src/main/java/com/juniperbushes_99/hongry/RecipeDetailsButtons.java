@@ -68,7 +68,7 @@ public class RecipeDetailsButtons extends Fragment {
             }
         });
 
-        // details button click interface with activity
+        // ingredients button click interface with activity
         final Button recipeDetailsIngredientsButton = (Button) inf.findViewById(R.id.RecipeDetailsIngredientsButton);
         recipeDetailsIngredientsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -76,7 +76,7 @@ public class RecipeDetailsButtons extends Fragment {
             }
         });
 
-        // details button click interface with activity
+        // nutritional info button click interface with activity
         final Button recipeDetailsNutInfoButton = (Button) inf.findViewById(R.id.RecipeDetailsNutInfoButton);
         recipeDetailsNutInfoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -87,6 +87,7 @@ public class RecipeDetailsButtons extends Fragment {
         return inf;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -116,7 +117,7 @@ public class RecipeDetailsButtons extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String s, String d);
+        void onFragmentInteraction(String s, String d);
     }
 
 }

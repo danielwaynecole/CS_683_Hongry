@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 /**
  * Created by ucoleda on 9/23/15.
+ * Represents a Yummly recipe
  */
 public class Recipe {
 

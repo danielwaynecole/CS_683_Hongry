@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -36,8 +35,7 @@ public class RecFaveStart extends Fragment {
 
     ListView recipeFavoritesListView;
     RecipeListArrayAdapter recipeFavoritesListAdapter;
-    ArrayAdapter<String> recipeFavoritesListAdapterString;
-    ArrayList<Recipe> recipeFavoritesListItems = new ArrayList<Recipe>();
+    ArrayList<Recipe> recipeFavoritesListItems = new ArrayList<>();
 
     private OnFragmentInteractionListener mListener;
 
@@ -48,8 +46,7 @@ public class RecFaveStart extends Fragment {
      * @return A new instance of fragment RecFaveStart.
      */
     public static RecFaveStart newInstance() {
-        RecFaveStart fragment = new RecFaveStart();
-        return fragment;
+        return new RecFaveStart();
     }
 
     public RecFaveStart() {
@@ -72,7 +69,7 @@ public class RecFaveStart extends Fragment {
 
     private void loadFavorites(View v){
         recipeFavoritesListView = (ListView) v.findViewById(R.id.recipeFavoritesList);
-        //ingredientListView = (ListView) getView().findViewById(R.id.RecipeIngredients);
+        // open file with recipe favorite json
         String FILENAME = "recipe_favorites";
         StringBuilder json = new StringBuilder();
         JSONArray jA = new JSONArray();
@@ -90,18 +87,16 @@ public class RecFaveStart extends Fragment {
             jA = jO.getJSONArray("favorites");
         } catch (FileNotFoundException e) {
             // do nothing
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
+        // loop through recipes and add to ArrayList
         for (int i = 0; i < jA.length(); i++) {
             try {
                 JSONObject fave = jA.getJSONObject(i);
                 String id = fave.optString("id");
                 String title = fave.optString("title");
-                String infoString = title;
-                HashMap<String, String> hmap = new HashMap<String, String>();
+                HashMap<String, String> hmap = new HashMap<>();
                 hmap.put("title", title);
                 hmap.put("id", id);
 
@@ -111,10 +106,12 @@ public class RecFaveStart extends Fragment {
                 e.printStackTrace();
             }
         }
+        // pass to custom array adapter
         recipeFavoritesListAdapter = new RecipeListArrayAdapter(v.getContext(), android.R.layout.list_content, recipeFavoritesListItems, mListener);
         recipeFavoritesListView.setAdapter(recipeFavoritesListAdapter);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -144,7 +141,7 @@ public class RecFaveStart extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String s, String d);
+        void onFragmentInteraction(String s, String d);
     }
 
 }

@@ -27,8 +27,7 @@ public class HungryHome extends Fragment {
      * @return A new instance of fragment HungryHome.
      */
     public static HungryHome newInstance() {
-        HungryHome fragment = new HungryHome();
-        return fragment;
+        return new HungryHome();
     }
 
     public HungryHome() {
@@ -62,6 +61,7 @@ public class HungryHome extends Fragment {
         return inf;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -99,6 +99,6 @@ public class HungryHome extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String s, String d);
+        void onFragmentInteraction(String s, String d);
     }
 }

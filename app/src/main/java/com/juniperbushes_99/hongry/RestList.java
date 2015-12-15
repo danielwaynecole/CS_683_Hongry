@@ -41,14 +41,11 @@ public class RestList extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment RestList.
      */
     // TODO: Rename and change types and number of parameters
-    public static RestList newInstance(String param1, String param2) {
-        RestList fragment = new RestList();
-        return fragment;
+    public static RestList newInstance() {
+        return new RestList();
     }
 
     public RestList() {
@@ -69,7 +66,7 @@ public class RestList extends Fragment {
         // Inflate the layout for this fragment
         View inf = inflater.inflate(R.layout.fragment_rest_list, container, false);
         listView = (ListView) inf.findViewById(R.id.restaurantList);
-        listItems = new ArrayList<Restaurant>();
+        listItems = new ArrayList<>();
 
         JSONObject jsonRootObject = null;
         try {
@@ -77,6 +74,7 @@ public class RestList extends Fragment {
         } catch (JSONException e) {
             Log.i(TAG, e.getMessage());
         }
+        assert jsonRootObject != null;
         jsonArray = jsonRootObject.optJSONArray("businesses");
         for(int i=0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = null;
@@ -85,16 +83,17 @@ public class RestList extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            HashMap<String, String> hmap = new HashMap<String, String>();
-            hmap.put("title", jsonObject.optString("name").toString());
-            hmap.put("id", jsonObject.optString("id").toString());
+            HashMap<String, String> hmap = new HashMap<>();
+            assert jsonObject != null;
+            hmap.put("title", jsonObject.optString("name"));
+            hmap.put("id", jsonObject.optString("id"));
             hmap.put("json", jsonObject.toString());
             Restaurant restaurant = new Restaurant(hmap);
             Log.i(TAG, restaurant.getJson());
             listItems.add(restaurant);
         }
 
-        adapter = new ArrayAdapter<Restaurant>(getContext(), android.R.layout.simple_list_item_1, listItems);
+        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listItems);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -109,6 +108,7 @@ public class RestList extends Fragment {
         return inf;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -138,7 +138,7 @@ public class RestList extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String s, String d);
+        void onFragmentInteraction(String s, String d);
     }
 
     private void showRestaurantDetails(String json){

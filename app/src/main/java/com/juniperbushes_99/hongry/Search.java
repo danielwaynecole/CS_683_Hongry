@@ -5,7 +5,6 @@ import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -19,24 +18,17 @@ import java.util.ArrayList;
 
 /**
  * Created by ucoleda on 9/23/15.
+ * Base Search Class
  */
-public abstract class Search<T> extends AsyncTask<ArrayList<String>, Void, String> {
+public abstract class Search extends AsyncTask<ArrayList<String>, Void, String> {
     private static final String TAG = "Search";
 
-    private String key;
     private String response;
     private String message;
     private int responseCode;
 
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public void executeRequest(HttpUriRequest request, String url)
+    @SuppressWarnings("deprecation")
+    public void executeRequest(HttpUriRequest request)
     {
         HttpClient client = new DefaultHttpClient();
 
@@ -58,9 +50,6 @@ public abstract class Search<T> extends AsyncTask<ArrayList<String>, Void, Strin
                 instream.close();
             }
 
-        } catch (ClientProtocolException e)  {
-            client.getConnectionManager().shutdown();
-            e.printStackTrace();
         } catch (IOException e) {
             client.getConnectionManager().shutdown();
             e.printStackTrace();
@@ -72,10 +61,10 @@ public abstract class Search<T> extends AsyncTask<ArrayList<String>, Void, Strin
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
 
-        String line = null;
+        String line;
         try {
             while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
+                sb.append(line).append("\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -94,7 +83,7 @@ public abstract class Search<T> extends AsyncTask<ArrayList<String>, Void, Strin
 
         final BufferedReader reader = new BufferedReader(new InputStreamReader( inputStream, Charset.forName("UTF-8")), 8192);
 
-        String line = "";
+        String line;
         String json = "";
         while ((line = reader.readLine()) != null) {
             json += line;
@@ -108,20 +97,8 @@ public abstract class Search<T> extends AsyncTask<ArrayList<String>, Void, Strin
         return response;
     }
 
-    public String getErrorMessage() {
-        return getMessage();
-    }
-
-    public int getResponseCode() {
-        return responseCode;
-    }
-
     public void setResponse(String response) {
         this.response = response;
-    }
-
-    public String getMessage() {
-        return message;
     }
 
     public void setMessage(String message) {
@@ -130,5 +107,13 @@ public abstract class Search<T> extends AsyncTask<ArrayList<String>, Void, Strin
 
     public void setResponseCode(int responseCode) {
         this.responseCode = responseCode;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public int getResponseCode() {
+        return responseCode;
     }
 }

@@ -1,7 +1,7 @@
 package com.juniperbushes_99.hongry;
 
-import android.util.Log;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -16,26 +16,25 @@ import java.util.ArrayList;
 
 /**
  * Created by ucoleda on 11/3/15.
+ * Fetches an image from a URL for display in app
  */
 public class ImageFetch extends AsyncTask<ArrayList<String>, Void, InputStream> {
     private static final String TAG = "ImageFetch";
 
+    @SuppressWarnings("deprecation")
+    @SafeVarargs
     @Override
-    protected InputStream doInBackground(ArrayList<String>... params) {
-        InputStream input = null;
-        ArrayList<String> args = (ArrayList<String>) params[0];
+    protected final InputStream doInBackground(ArrayList<String>... params) {
+        InputStream input;
+        ArrayList<String> args = params[0];
         String imageURL = args.get(0);
         try {
             URL url = new URL(imageURL);
-            //try this url = "http://0.tqn.com/d/webclipart/1/0/5/l/4/floral-icon-5.jpg"
-            HttpGet httpRequest = null;
-
+            HttpGet httpRequest;
             httpRequest = new HttpGet(url.toURI());
-
             HttpClient httpclient = new DefaultHttpClient();
-            HttpResponse response = (HttpResponse) httpclient
+            HttpResponse response = httpclient
                     .execute(httpRequest);
-
             HttpEntity entity = response.getEntity();
             BufferedHttpEntity b_entity = new BufferedHttpEntity(entity);
             input = b_entity.getContent();
@@ -43,6 +42,6 @@ public class ImageFetch extends AsyncTask<ArrayList<String>, Void, InputStream> 
         } catch (Exception ex) {
             Log.d(TAG, "image fetch error: " + ex.toString() + "\n");
         }
-        return input;
+        return null;
     }
 }

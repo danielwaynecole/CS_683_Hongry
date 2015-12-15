@@ -1,6 +1,5 @@
 package com.juniperbushes_99.hongry;
 
-import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -29,16 +27,12 @@ import org.json.JSONObject;
  */
 public class RestMap extends Fragment {
 
-    private static final String TAG = "RESTAURANT_MAP";
+    public static final String TAG = "RESTAURANT_MAP";
 
     private Double latitude;
     private Double longitude;
     private String title;
-    private JSONObject jObj;
     MapView mMapView;
-    private GoogleMap googleMap;
-    private View view;
-
 
 
     /**
@@ -49,8 +43,7 @@ public class RestMap extends Fragment {
      */
     // TODO: Rename and change types and number of parameters
     public static RestMap newInstance() {
-        RestMap fragment = new RestMap();
-        return fragment;
+        return new RestMap();
     }
 
     public RestMap() {
@@ -64,7 +57,7 @@ public class RestMap extends Fragment {
         if (getArguments() != null) {
             json = getArguments().getString("coordinates");
             try {
-                jObj = new JSONObject(json);
+                JSONObject jObj = new JSONObject(json);
                 this.latitude = Double.parseDouble(jObj.optString("latitude"));
                 this.longitude = Double.parseDouble(jObj.optString("longitude"));
                 this.title = jObj.optString("title");
@@ -78,7 +71,7 @@ public class RestMap extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = (View) inflater.inflate(R.layout.fragment_rest_map, container, false);
+        View view = inflater.inflate(R.layout.fragment_rest_map, container, false);
         mMapView = (MapView) view.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
@@ -90,7 +83,7 @@ public class RestMap extends Fragment {
             e.printStackTrace();
         }
 
-        googleMap = mMapView.getMap();
+        GoogleMap googleMap = mMapView.getMap();
 
         // create marker
         MarkerOptions marker = new MarkerOptions().position(

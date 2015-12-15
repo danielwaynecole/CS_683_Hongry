@@ -17,12 +17,9 @@ import android.content.IntentSender;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationRequest;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -40,7 +37,6 @@ public class RestNewStart extends Fragment implements com.google.android.gms.loc
     private static final String TAG = "SearchRestaurants";
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private GoogleApiClient mGoogleApiClient;
-    private Location location;
     private LocationRequest mLocationRequest;
     NumberPicker np;
     private double latitude;
@@ -55,8 +51,7 @@ public class RestNewStart extends Fragment implements com.google.android.gms.loc
      * @return A new instance of fragment RestNewStart.
      */
     public static RestNewStart newInstance() {
-        RestNewStart fragment = new RestNewStart();
-        return fragment;
+        return new RestNewStart();
     }
 
     public RestNewStart() {
@@ -89,7 +84,7 @@ public class RestNewStart extends Fragment implements com.google.android.gms.loc
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(10 * 1000)        // 10 seconds, in milliseconds
-                .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+                .setFastestInterval(1000); // 1 second, in milliseconds
 
         final Button eatOutSearchStartButton = (Button) inf.findViewById(R.id.searchRestaurantsButton);
         eatOutSearchStartButton.setOnClickListener(new View.OnClickListener() {
@@ -101,6 +96,7 @@ public class RestNewStart extends Fragment implements com.google.android.gms.loc
         return inf;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -130,7 +126,7 @@ public class RestNewStart extends Fragment implements com.google.android.gms.loc
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String s, String d);
+        void onFragmentInteraction(String s, String d);
     }
 
     @Override
@@ -143,25 +139,25 @@ public class RestNewStart extends Fragment implements com.google.android.gms.loc
     public void onPause() {
         super.onPause();
         if (mGoogleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, (com.google.android.gms.location.LocationListener) this);
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
             mGoogleApiClient.disconnect();
         }
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-        location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (location == null) {
             Log.i(TAG, "location is null");
             final TextView addressLabel = (TextView) view.findViewById(R.id.addressLabel);
             final EditText address = (EditText) view.findViewById(R.id.address);
-            addressLabel.setVisibility(view.VISIBLE);
-            address.setVisibility(view.VISIBLE);
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, (com.google.android.gms.location.LocationListener) this);
+            addressLabel.setVisibility(View.VISIBLE);
+            address.setVisibility(View.VISIBLE);
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
         else {
             handleNewLocation(location);
-        };
+        }
     }
 
     @Override
@@ -169,8 +165,8 @@ public class RestNewStart extends Fragment implements com.google.android.gms.loc
         Log.i(TAG, "Location services suspended. Please reconnect.");
         final TextView addressLabel = (TextView) view.findViewById(R.id.addressLabel);
         final EditText address = (EditText) view.findViewById(R.id.address);
-        addressLabel.setVisibility(view.VISIBLE);
-        address.setVisibility(view.VISIBLE);
+        addressLabel.setVisibility(View.VISIBLE);
+        address.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -192,8 +188,8 @@ public class RestNewStart extends Fragment implements com.google.android.gms.loc
             */
             final TextView addressLabel = (TextView) view.findViewById(R.id.addressLabel);
             final EditText address = (EditText) view.findViewById(R.id.address);
-            addressLabel.setVisibility(view.VISIBLE);
-            address.setVisibility(view.VISIBLE);
+            addressLabel.setVisibility(View.VISIBLE);
+            address.setVisibility(View.VISIBLE);
 
             Log.i(TAG, "Location services connection failed with code " + connectionResult.getErrorCode() + ". Message: " + connectionResult.getErrorCode());
         }
@@ -219,14 +215,16 @@ public class RestNewStart extends Fragment implements com.google.android.gms.loc
         Log.i(TAG, "location is null");
         final TextView addressLabel = (TextView) view.findViewById(R.id.addressLabel);
         final EditText address = (EditText) view.findViewById(R.id.address);
-        addressLabel.setVisibility(view.VISIBLE);
-        address.setVisibility(view.VISIBLE);
+        addressLabel.setVisibility(View.VISIBLE);
+        address.setVisibility(View.VISIBLE);
     }
 
     private void handleNewLocation(Location location){
         latitude = location.getLatitude();
         longitude = location.getLongitude();
-    };
+    }
+
+    @SuppressWarnings("unchecked")
     public void searchRestaurantsGo(){
         EditText keyword = (EditText) view.findViewById(R.id.restaurantSearchKeywordInput);
         String k = keyword.getText().toString();
@@ -237,7 +235,7 @@ public class RestNewStart extends Fragment implements com.google.android.gms.loc
         NumberPicker radiusPicker = (NumberPicker) view.findViewById(R.id.radiusPicker);
         int r = radiusPicker.getValue();
 
-        ArrayList<String> params = new ArrayList<String>();
+        ArrayList<String> params = new ArrayList<>();
         params.add(k);
         params.add(String.valueOf(r));
         params.add(String.valueOf(latitude));
@@ -247,9 +245,7 @@ public class RestNewStart extends Fragment implements com.google.android.gms.loc
         try {
             String json = new YelpSearch().execute(params).get();
             mListener.onFragmentInteraction("restList", json);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
     }

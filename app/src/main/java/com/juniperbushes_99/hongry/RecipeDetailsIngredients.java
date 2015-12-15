@@ -1,7 +1,5 @@
 package com.juniperbushes_99.hongry;
 
-import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -15,13 +13,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link RecipeDetailsIngredients.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link RecipeDetailsIngredients#newInstance} factory method to
  * create an instance of this fragment.
@@ -36,13 +32,12 @@ public class RecipeDetailsIngredients extends Fragment {
     ArrayAdapter<String> ingredientListAdapter;
     private JSONArray ingredients;
 
-    private OnFragmentInteractionListener mListener;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param ingredients
+     * @param ingredients String
      * @return A new instance of fragment RecipeDetailsIngredients.
      */
     // TODO: Rename and change types and number of parameters
@@ -67,8 +62,7 @@ public class RecipeDetailsIngredients extends Fragment {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             Bundle b = getArguments();
-            String json = b.getString("ingredientList");
-            String iS = json;
+            String iS = b.getString("ingredientList");
             try {
                 JSONArray jIngredients = new JSONArray(iS);
                 setIngredients(jIngredients);
@@ -87,8 +81,7 @@ public class RecipeDetailsIngredients extends Fragment {
         // build the ingredients listview
         ingredientListView = (ListView) inf.findViewById(R.id.RecipeIngredients);
         //ingredientListView = (ListView) getView().findViewById(R.id.RecipeIngredients);
-        ingredientListItems = new ArrayList<String>();
-        String ingredientsString = "";
+        ingredientListItems = new ArrayList<>();
         Log.i(TAG, "seriously..." + ingredients.toString() + "\n");
         for(int i=0; i < ingredients.length(); i++) {
             try {
@@ -99,49 +92,13 @@ public class RecipeDetailsIngredients extends Fragment {
         }
         Log.i(TAG, "ingredient list: " + ingredientListItems.toString() + "\n");
 
-        ingredientListAdapter = new ArrayAdapter<String>(inf.getContext(), android.R.layout.simple_list_item_1, ingredientListItems);
+        ingredientListAdapter = new ArrayAdapter<>(inf.getContext(), android.R.layout.simple_list_item_1, ingredientListItems);
         ingredientListView.setAdapter(ingredientListAdapter);
         return inf;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public JSONArray getIngredients() {
-        return ingredients;
-    }
-
     public void setIngredients(JSONArray ingredients) {
         this.ingredients = ingredients;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(String s, String d);
     }
 
     @Override

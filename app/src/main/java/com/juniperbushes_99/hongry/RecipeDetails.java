@@ -34,8 +34,6 @@ public class RecipeDetails extends Fragment {
     private static final String TAG = "RECIPE_DETAILS_CONT";
     private static final String ID = "recipeID";
 
-    private JSONArray ingredients;
-    private JSONArray nutritionalInfo;
     private JSONObject jsonRootObject;
     private String recipeID;
 
@@ -72,18 +70,15 @@ public class RecipeDetails extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View inf = inflater.inflate(R.layout.fragment_recipe_details, container, false);
-        ArrayList<String> params = new ArrayList<String>();
+        ArrayList<String> params = new ArrayList<>();
         params.add(recipeID);
         String json = null;
         try {
             json = new YummlyDetails().execute(params).get().toString();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         JSONObject imageObject = null;
-        JSONObject sourceObject = null;
 
         try {
             jsonRootObject = new JSONObject(json);
@@ -97,11 +92,12 @@ public class RecipeDetails extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String imageURL = imageObject.optString("hostedMediumUrl").toString();
+        assert imageObject != null;
+        String imageURL = imageObject.optString("hostedMediumUrl");
         Log.i(TAG, "image url: " + imageURL + "\n");
 
-        ingredients = jsonRootObject.optJSONArray("ingredientLines");
-        nutritionalInfo = jsonRootObject.optJSONArray("nutritionEstimates");
+        JSONArray ingredients = jsonRootObject.optJSONArray("ingredientLines");
+        JSONArray nutritionalInfo = jsonRootObject.optJSONArray("nutritionEstimates");
 
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
@@ -143,7 +139,8 @@ public class RecipeDetails extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            final String sourceURL = jsonSourceObject.optString("sourceRecipeUrl").toString();
+            assert jsonSourceObject != null;
+            final String sourceURL = jsonSourceObject.optString("sourceRecipeUrl");
 
             //String id, String imageURL, String title, String servingInfo
             // Create a new Fragment to be placed in the activity layout
@@ -174,9 +171,7 @@ public class RecipeDetails extends Fragment {
             jA = jO.getJSONArray("favorites");
         } catch (FileNotFoundException e) {
             // do nothing
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         // remove unwanted element

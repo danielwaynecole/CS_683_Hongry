@@ -1,6 +1,5 @@
 package com.juniperbushes_99.hongry;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,7 +8,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +33,6 @@ import java.util.concurrent.ExecutionException;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link RecipeDetailsHeader.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link RecipeDetailsHeader#newInstance} factory method to
  * create an instance of this fragment.
@@ -55,10 +52,7 @@ public class RecipeDetailsHeader extends Fragment {
     private String title;
     private String imageURL;
     private String id;
-    private String servingInfo;
     private boolean isFave;
-
-    private OnFragmentInteractionListener mListener;
 
     /**
      * Use this factory method to create a new instance of
@@ -91,25 +85,24 @@ public class RecipeDetailsHeader extends Fragment {
         if (getArguments() != null) {
             id = getArguments().getString(ID);
             title = getArguments().getString(TITLE);
-            servingInfo = getArguments().getString(SERVING_INFO);
             imageURL = getArguments().getString(IMAGE_URL);
             isFave = getArguments().getBoolean(ISFAVE);
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View inf = inflater.inflate(R.layout.fragment_recipe_details_header, container, false);
-        TextView faveTextView = (TextView) inf.findViewById(R.id.fa_heart_icon);
+        final TextView faveTextView = (TextView) inf.findViewById(R.id.fa_heart_icon);
         //Select TextView we want to change the Font
         Typeface font = Typeface.createFromAsset(inf.getContext().getAssets(), "fontawesome-webfont.ttf");
         //Set the typeface
         faveTextView.setTypeface(font);
-        final TextView addToFavorites = (TextView) inf.findViewById(R.id.fa_heart_icon);
         if(!isFave) {
-            addToFavorites.setOnClickListener(new View.OnClickListener() {
+            faveTextView.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     try {
                         addToFavorites();
@@ -127,16 +120,14 @@ public class RecipeDetailsHeader extends Fragment {
         // add image to header
         Log.i(TAG, "image url: " + imageURL + "\n");
         ImageView img = (ImageView) inf.findViewById(R.id.recipeImage);
-        ArrayList<String> imageFetchParams = new ArrayList<String>();
+        ArrayList<String> imageFetchParams = new ArrayList<>();
         imageFetchParams.add(imageURL);
-        Bitmap bitmap = null;
+        Bitmap bitmap;
         try {
             InputStream input = new ImageFetch().execute(imageFetchParams).get();
             bitmap = BitmapFactory.decodeStream(input);
             img.setImageBitmap(bitmap);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
 
@@ -145,38 +136,6 @@ public class RecipeDetailsHeader extends Fragment {
         titleElement.setText(title);
 
         return inf;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(String s, String d);
     }
 
     private void addToFavorites() throws JSONException {
@@ -199,9 +158,7 @@ public class RecipeDetailsHeader extends Fragment {
             jA = jO.getJSONArray("favorites");
         } catch (FileNotFoundException e) {
             // do nothing
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
 

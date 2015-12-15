@@ -44,8 +44,7 @@ public class RecList extends Fragment {
      */
     // TODO: Rename and change types and number of parameters
     public static RecList newInstance() {
-        RecList fragment = new RecList();
-        return fragment;
+        return new RecList();
     }
 
     public RecList() {
@@ -74,7 +73,7 @@ public class RecList extends Fragment {
         // Inflate the layout for this fragment
         View inf = inflater.inflate(R.layout.fragment_rec_list, container, false);
         listView = (ListView) inf.findViewById(R.id.recipeList);
-        listItems = new ArrayList<Recipe>();
+        listItems = new ArrayList<>();
         JSONArray jsonArray = jsonRootObject.optJSONArray("matches");
         Log.i(TAG, "blarg: " + jsonArray.toString() + "\n");
         if(jsonArray.length() > 0) {
@@ -85,15 +84,16 @@ public class RecList extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                HashMap<String, String> hmap = new HashMap<String, String>();
-                hmap.put("title", jsonObject.optString("recipeName").toString());
-                hmap.put("id", jsonObject.optString("id").toString());
+                HashMap<String, String> hmap = new HashMap<>();
+                assert jsonObject != null;
+                hmap.put("title", jsonObject.optString("recipeName"));
+                hmap.put("id", jsonObject.optString("id"));
 
                 Recipe r = new Recipe(hmap);
                 listItems.add(r);
             }
 
-            adapter = new ArrayAdapter<Recipe>(inf.getContext(), android.R.layout.simple_list_item_1, listItems);
+            adapter = new ArrayAdapter<>(inf.getContext(), android.R.layout.simple_list_item_1, listItems);
             listView.setAdapter(adapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -101,14 +101,13 @@ public class RecList extends Fragment {
                                         long arg3) {
                     Recipe recipe = (Recipe) adapter.getItemAtPosition(position);
                     mListener.onFragmentInteraction("recDetails", recipe.getId());
-                    // assuming string and if you want to get the value on click of list item
-                    // do what you intend to do on click of listview row
                 }
             });
         }
         return inf;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -138,7 +137,7 @@ public class RecList extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String s, String d);
+        void onFragmentInteraction(String s, String d);
     }
 
 }

@@ -1,14 +1,12 @@
 package com.juniperbushes_99.hongry;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -37,8 +35,7 @@ public class RestFaveStart extends Fragment {
 
     ListView restaurantFavoritesListView;
     RestaurantListArrayAdapter restaurantFavoritesListAdapter;
-    ArrayAdapter<String> restaurantFavoritesListAdapterString;
-    ArrayList<Restaurant> restaurantFavoritesListItems = new ArrayList<Restaurant>();
+    ArrayList<Restaurant> restaurantFavoritesListItems = new ArrayList<>();
     View view;
 
     private OnFragmentInteractionListener mListener;
@@ -51,8 +48,7 @@ public class RestFaveStart extends Fragment {
      */
     // TODO: Rename and change types and number of parameters
     public static RestFaveStart newInstance() {
-        RestFaveStart fragment = new RestFaveStart();
-        return fragment;
+        return new RestFaveStart();
     }
 
     public RestFaveStart() {
@@ -94,9 +90,7 @@ public class RestFaveStart extends Fragment {
             jA = jO.getJSONArray("favorites");
         } catch (FileNotFoundException e) {
             // do nothing
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         if(jA.length() > 0) {
@@ -105,7 +99,7 @@ public class RestFaveStart extends Fragment {
                     JSONObject fave = jA.getJSONObject(i);
                     String id = fave.optString("id");
                     String name = fave.optString("name");
-                    HashMap<String, String> hmap = new HashMap<String, String>();
+                    HashMap<String, String> hmap = new HashMap<>();
                     hmap.put("title", name);
                     hmap.put("id", id);
                     hmap.put("json", fave.toString());
@@ -121,6 +115,7 @@ public class RestFaveStart extends Fragment {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -151,7 +146,7 @@ public class RestFaveStart extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String s, String d);
+        void onFragmentInteraction(String s, String d);
     }
 
 }

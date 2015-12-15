@@ -28,8 +28,7 @@ public class RestStart extends Fragment {
      * @return A new instance of fragment RestStart.
      */
     public static RestStart newInstance() {
-        RestStart fragment = new RestStart();
-        return fragment;
+        return new RestStart();
     }
 
     public RestStart() {
@@ -61,6 +60,7 @@ public class RestStart extends Fragment {
         return inf;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -99,7 +99,7 @@ public class RestStart extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String s, String d);
+        void onFragmentInteraction(String s, String d);
     }
 
 }

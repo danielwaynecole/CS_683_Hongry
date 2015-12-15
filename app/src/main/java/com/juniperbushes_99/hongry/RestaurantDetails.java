@@ -46,7 +46,6 @@ public class RestaurantDetails extends Fragment {
     private static final String TAG = "RESTAURANT_DETAILS";
     private String json;
     private JSONObject rObj = null;
-    private View view;
     private Restaurant restaurant;
     private OnFragmentInteractionListener mListener;
 
@@ -59,8 +58,7 @@ public class RestaurantDetails extends Fragment {
      */
     // TODO: Rename and change types and number of parameters
     public static RestaurantDetails newInstance() {
-        RestaurantDetails fragment = new RestaurantDetails();
-        return fragment;
+        return new RestaurantDetails();
     }
 
     public RestaurantDetails() {
@@ -80,14 +78,15 @@ public class RestaurantDetails extends Fragment {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View inf = inflater.inflate(R.layout.fragment_restaurant_details, container, false);
-        HashMap<String, String> hmap = new HashMap<String, String>();
-        hmap.put("title", rObj.optString("name").toString());
-        hmap.put("id", rObj.optString("id").toString());
+        HashMap<String, String> hmap = new HashMap<>();
+        hmap.put("title", rObj.optString("name"));
+        hmap.put("id", rObj.optString("id"));
         hmap.put("json", rObj.toString());
         restaurant = new Restaurant(hmap);
 
@@ -126,7 +125,7 @@ public class RestaurantDetails extends Fragment {
             Log.i(TAG, String.valueOf(jAddress.length()));
             for(int i = 0; i < jAddress.length(); i++){
                 Log.i(TAG, jAddress.get(i).toString());
-                displayAddress.append(jAddress.get(i).toString() + "\n");
+                displayAddress.append(jAddress.get(i).toString()).append("\n");
             }
             address.setText(displayAddress.toString());
         } catch (JSONException e) {
@@ -136,6 +135,7 @@ public class RestaurantDetails extends Fragment {
         address.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 try {
+                    assert finalLocation != null;
                     JSONObject coordinate = finalLocation.getJSONObject("coordinate");
                     coordinate.put("title", rObj.optString("name"));
                     mListener.onFragmentInteraction("restMap", coordinate.toString());
@@ -160,21 +160,19 @@ public class RestaurantDetails extends Fragment {
             }
         });
 
-        Bitmap bitmap = null;
+        Bitmap bitmap;
 
         // add image to header
         String restImageURL = rObj.optString("image_url");
         Log.i(TAG, "restaurant image url: " + restImageURL + "\n");
         ImageView restImg = (ImageView) inf.findViewById(R.id.restImage);
-        ArrayList<String> imageFetchParams = new ArrayList<String>();
+        ArrayList<String> imageFetchParams = new ArrayList<>();
         imageFetchParams.add(restImageURL);
         try {
             InputStream input = new ImageFetch().execute(imageFetchParams).get();
             bitmap = BitmapFactory.decodeStream(input);
             restImg.setImageBitmap(bitmap);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
 
@@ -182,18 +180,15 @@ public class RestaurantDetails extends Fragment {
         String ratingsImageURL = rObj.optString("rating_img_url_small");
         Log.i(TAG, "ratings image url: " + restImageURL + "\n");
         ImageView ratingsImg = (ImageView) inf.findViewById(R.id.ratingImage);
-        ArrayList<String> ratingsImageFetchParams = new ArrayList<String>();
+        ArrayList<String> ratingsImageFetchParams = new ArrayList<>();
         ratingsImageFetchParams.add(ratingsImageURL);
         try {
             InputStream input = new ImageFetch().execute(ratingsImageFetchParams).get();
             bitmap = BitmapFactory.decodeStream(input);
             ratingsImg.setImageBitmap(bitmap);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-        view = inf;
         return inf;
     }
 
@@ -217,9 +212,7 @@ public class RestaurantDetails extends Fragment {
             jA = jO.getJSONArray("favorites");
         } catch (FileNotFoundException e) {
             // do nothing
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
 
@@ -260,9 +253,7 @@ public class RestaurantDetails extends Fragment {
             jA = jO.getJSONArray("favorites");
         } catch (FileNotFoundException e) {
             // do nothing
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         // remove unwanted element
@@ -280,6 +271,7 @@ public class RestaurantDetails extends Fragment {
         return isInFavorites;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -309,6 +301,6 @@ public class RestaurantDetails extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String s, String d);
+        void onFragmentInteraction(String s, String d);
     }
 }

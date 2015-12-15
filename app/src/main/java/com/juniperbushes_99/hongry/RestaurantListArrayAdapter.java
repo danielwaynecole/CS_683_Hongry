@@ -1,11 +1,10 @@
 package com.juniperbushes_99.hongry;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +28,7 @@ import java.util.ArrayList;
 
 /**
  * Created by ucoleda on 11/23/15.
+ * Custom list for Restaurant List Favorites
  */
 
 
@@ -42,6 +42,7 @@ public class RestaurantListArrayAdapter extends ArrayAdapter<Restaurant> {
         this.mListener = mListener;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
@@ -121,9 +122,7 @@ public class RestaurantListArrayAdapter extends ArrayAdapter<Restaurant> {
             jA = jO.getJSONArray("favorites");
         } catch (FileNotFoundException e) {
             // do nothing
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         // remove unwanted element

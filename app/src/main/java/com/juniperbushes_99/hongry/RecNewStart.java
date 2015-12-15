@@ -1,7 +1,6 @@
 package com.juniperbushes_99.hongry;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -36,8 +35,7 @@ public class RecNewStart extends Fragment {
      * @return A new instance of fragment RecNewStart.
      */
     public static RecNewStart newInstance() {
-        RecNewStart fragment = new RecNewStart();
-        return fragment;
+        return new RecNewStart();
     }
 
     public RecNewStart() {
@@ -55,7 +53,7 @@ public class RecNewStart extends Fragment {
         // Inflate the layout for this fragment
         View inf = inflater.inflate(R.layout.fragment_rec_new_start, container, false);
         Spinner spinner = (Spinner) inf.findViewById(R.id.cuisineSpinner);
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(inf.getContext(), android.R.layout.simple_spinner_item, android.R.id.text1);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(inf.getContext(), android.R.layout.simple_spinner_item, android.R.id.text1);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
         for(int i = 0; i < Constants.yummlyCuisines.length; i++){
@@ -73,10 +71,11 @@ public class RecNewStart extends Fragment {
         return inf;
     }
 
+    @SuppressWarnings("unchecked")
     public void searchRecipesGo(){
         EditText keyword = (EditText) view.findViewById(R.id.recipeKeyword);
 
-        ArrayList<String> params = new ArrayList<String>();
+        ArrayList<String> params = new ArrayList<>();
 
         // add keyword to params
         String k = keyword.getText().toString();
@@ -89,13 +88,12 @@ public class RecNewStart extends Fragment {
         try {
             String json = new YummlySearch().execute(params).get().toString();
             mListener.onFragmentInteraction("recipeList", json);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -125,7 +123,7 @@ public class RecNewStart extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String s, String d);
+        void onFragmentInteraction(String s, String d);
     }
 
 }

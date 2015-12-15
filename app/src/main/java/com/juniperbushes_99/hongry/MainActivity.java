@@ -15,11 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
 public class MainActivity extends AppCompatActivity
         implements RestFaveStart.OnFragmentInteractionListener,
         RecFaveStart.OnFragmentInteractionListener,
@@ -29,18 +24,15 @@ public class MainActivity extends AppCompatActivity
         RestNewStart.OnFragmentInteractionListener,
         RestaurantDetails.OnFragmentInteractionListener,
         HungryHome.OnFragmentInteractionListener,
-        RecipeDetailsIngredients.OnFragmentInteractionListener,
-        RecipeDetailsHeader.OnFragmentInteractionListener,
-        RecipeDetailsNutritionalInfo.OnFragmentInteractionListener,
         RecipeDetailsButtons.OnFragmentInteractionListener,
         RecList.OnFragmentInteractionListener,
         RestList.OnFragmentInteractionListener {
     private static final String TAG = "Home";
     private DrawerLayout mDrawer;
-    private Toolbar toolbar;
     private Menu menu;
     private ActionBarDrawerToggle mDrawerToggle;
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +40,7 @@ public class MainActivity extends AppCompatActivity
 
 
         // Set a Toolbar to replace the ActionBar.
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -88,16 +80,14 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         try {
             fragmentManager.beginTransaction().replace(R.id.flContent, HungryHome.class.newInstance()).commit();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // The action bar home/up action should open or close the drawer.
+        // The action bar hamburger should open or close menu.
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawer.openDrawer(GravityCompat.START);
@@ -107,7 +97,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    // Make sure this is the method with just `Bundle` as the signature
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -126,8 +115,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void selectDrawerItem(MenuItem menuItem) {
-        // Create a new fragment and specify the planet to show based on
-        // position
+        // Create a new fragment for the content view
+        // this is for when an item in the menu is clicked on
         Fragment fragment = null;
 
         Class fragmentClass;
@@ -166,8 +155,10 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onFragmentInteraction(String route, String data ) {
-        // Create a new fragment and specify the planet to show based on
-        // position
+        // this changes the display in the main content view
+        // or some sub fragment within a displayed fragement
+        // it also changes the title, if necessary
+        // and changes the display of a menu to selected (if it's an item you can navigate to from menu)
         Fragment fragment = null;
         MenuItem m;
         Class fragmentClass;
@@ -175,6 +166,7 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction transaction;
         int replaceID = R.id.flContent;
         boolean addToBS = true;
+        // main router, indicates appropriate fragment
         switch (route) {
             case "eatInStart":
                 fragmentClass = RecStart.class;
@@ -187,28 +179,24 @@ public class MainActivity extends AppCompatActivity
             case "recFaves":
                 fragmentClass = RecFaveStart.class;
                 m = menu.findItem(R.id.nav_fave_recipe);
-                // Highlight the selected item, update the title, and close the drawer
                 m.setChecked(true);
                 setTitle(m.getTitle());
                 break;
             case "recNew":
                 fragmentClass = RecNewStart.class;
                 m = menu.findItem(R.id.nav_new_recipe);
-                // Highlight the selected item, update the title, and close the drawer
                 m.setChecked(true);
                 setTitle(m.getTitle());
                 break;
             case "restFaves":
                 fragmentClass = RestFaveStart.class;
                 m = menu.findItem(R.id.nav_fave_restuarant);
-                // Highlight the selected item, update the title, and close the drawer
                 m.setChecked(true);
                 setTitle(m.getTitle());
                 break;
             case "restNew":
                 fragmentClass = RestNewStart.class;
                 m = menu.findItem(R.id.nav_new_recipe);
-                // Highlight the selected item, update the title, and close the drawer
                 m.setChecked(true);
                 setTitle(m.getTitle());
                 break;
@@ -253,7 +241,7 @@ public class MainActivity extends AppCompatActivity
                 fragmentClass = HungryHome.class;
                 setTitle(R.string.homeTitle);
         }
-
+        // instatiate the indicated fragment
         try {
             fragment = (Fragment) fragmentClass.newInstance();
             fragment.setArguments(args);
@@ -264,9 +252,11 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         transaction = fragmentManager.beginTransaction();
 
+        // add fragment view to back stack if indicated
         if(addToBS) {
             transaction.addToBackStack(null);
         }
+        // load the fragment
         transaction.replace(replaceID, fragment).commit();
     }
 }

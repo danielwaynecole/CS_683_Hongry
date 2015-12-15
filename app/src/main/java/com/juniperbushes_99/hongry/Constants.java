@@ -2,6 +2,7 @@ package com.juniperbushes_99.hongry;
 
 /**
  * Created by ucoleda on 10/6/15.
+ * Application Constants
  */
 public class Constants {
 

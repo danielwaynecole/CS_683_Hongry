@@ -30,8 +30,7 @@ public class RecStart extends Fragment {
      */
     //
     public static RecStart newInstance() {
-        RecStart fragment = new RecStart();
-        return fragment;
+        return new RecStart();
     }
 
     public RecStart() {
@@ -64,6 +63,7 @@ public class RecStart extends Fragment {
         return inf;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -102,7 +102,7 @@ public class RecStart extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String s, String d);
+        void onFragmentInteraction(String s, String d);
     }
 
 }

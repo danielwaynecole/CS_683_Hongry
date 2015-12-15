@@ -7,17 +7,11 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.List;
-
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.util.Log;
-import android.widget.TextView;
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthConsumer;
@@ -25,17 +19,17 @@ import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import android.os.AsyncTask;
-import android.content.Intent;
-import android.os.Bundle;
 
 /**
  * Created by ucoleda on 9/23/15.
+ * Interface with Yelp Search API
  */
 public class YelpSearch extends AsyncTask<ArrayList<String>, Void, String> {
     private static final String TAG = "YelpSearch";
 
+    @SafeVarargs
     @Override
-    protected String doInBackground(ArrayList<String>... params) {
+    protected final String doInBackground(ArrayList<String>... params) {
         ArrayList<String> args = params[0];
         String keyword = args.get(0);
         String location = args.get(4);
@@ -68,7 +62,6 @@ public class YelpSearch extends AsyncTask<ArrayList<String>, Void, String> {
         }
         String json = "";
 
-        List<Restaurant> restaurants = new ArrayList<Restaurant>();
         // create a consumer object and configure it with the access
         // token and token secret obtained from the service provider
         OAuthConsumer consumer = new DefaultOAuthConsumer(Constants.yelpKey,
@@ -86,21 +79,19 @@ public class YelpSearch extends AsyncTask<ArrayList<String>, Void, String> {
         }
         HttpURLConnection apiRequest = null;
         try {
+            assert url != null;
             apiRequest = (HttpURLConnection) url.openConnection();
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
             consumer.sign(apiRequest);
-        } catch (OAuthMessageSignerException e) {
-            Log.i(TAG, e.toString());
-        } catch (OAuthExpectationFailedException e) {
-            Log.i(TAG, e.toString());
-        } catch (OAuthCommunicationException e) {
+        } catch (OAuthMessageSignerException | OAuthExpectationFailedException | OAuthCommunicationException e) {
             Log.i(TAG, e.toString());
         }
         Log.i(TAG, "Sending request...");
         try {
+            assert apiRequest != null;
             apiRequest.connect();
         } catch (IOException e) {
             Log.i(TAG, e.toString());
@@ -150,7 +141,7 @@ public class YelpSearch extends AsyncTask<ArrayList<String>, Void, String> {
 
         final BufferedReader reader = new BufferedReader(new InputStreamReader( inputStream, Charset.forName("UTF-8")), 8192);
 
-        String line = "";
+        String line;
         String json = "";
         while ((line = reader.readLine()) != null) {
             json += line;

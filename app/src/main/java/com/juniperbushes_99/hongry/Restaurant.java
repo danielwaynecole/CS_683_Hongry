@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 /**
  * Created by ucoleda on 9/23/15.
+ * Represents a Yelp restaurant
+ *
  */
 public class Restaurant {
     private String id;

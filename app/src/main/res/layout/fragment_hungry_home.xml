@@ -66,6 +66,7 @@
         android:layout_alignParentStart="true"
         android:layout_above="@+id/eatIn"
         android:layout_alignRight="@+id/eatIn"
-        android:layout_alignEnd="@+id/eatIn" />
+        android:layout_alignEnd="@+id/eatIn"
+        android:contentDescription="Pizza Ninja Image" />
 
 </RelativeLayout>
