@@ -2,9 +2,12 @@ package com.juniperbushes_99.hongry;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import android.util.Log;
 
@@ -23,6 +26,11 @@ public class YummlySearch extends Search {
     protected final String doInBackground(ArrayList<String>... params) {
         ArrayList<String> args = params[0];
         String keyword = args.get(0);
+        try {
+            keyword = URLEncoder.encode(keyword, Charset.forName("UTF-8").name());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         String json = "";
         // create an HTTP request to a protected resource
         String urlString = Constants.yummlyAPIEndPoint + "/api/recipes?_app_id="+Constants.yummlyAppID+"&_app_key="+Constants.yummlyKey+"&q="+keyword;

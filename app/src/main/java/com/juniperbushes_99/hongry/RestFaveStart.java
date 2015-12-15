@@ -1,6 +1,7 @@
 package com.juniperbushes_99.hongry;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -66,13 +67,14 @@ public class RestFaveStart extends Fragment {
         // Inflate the layout for this fragment
         View inf = inflater.inflate(R.layout.fragment_rest_fave_start, container, false);
         view = inf;
-        loadFavorites();
+        if(savedInstanceState == null) {
+            loadFavorites();
+        }
         return inf;
     }
 
     private void loadFavorites(){
         restaurantFavoritesListView = (ListView) view.findViewById(R.id.restaurantFavoritesList);
-        //ingredientListView = (ListView) getView().findViewById(R.id.RestaurantIngredients);
         String FILENAME = "restaurant_favorites";
         StringBuilder json = new StringBuilder();
         JSONArray jA = new JSONArray();
@@ -94,6 +96,7 @@ public class RestFaveStart extends Fragment {
             e.printStackTrace();
         }
         if(jA.length() > 0) {
+            // loop through restaurants and create Restaurant objects, then add to custom array adapter
             for (int i = 0; i < jA.length(); i++) {
                 try {
                     JSONObject fave = jA.getJSONObject(i);
@@ -130,8 +133,14 @@ public class RestFaveStart extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        restaurantFavoritesListAdapter = null;
         mListener = null;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
+        fm.saveFragmentInstanceState(RestFaveStart.this);
     }
 
     /**

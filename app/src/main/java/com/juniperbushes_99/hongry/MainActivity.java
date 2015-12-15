@@ -79,7 +79,9 @@ public class MainActivity extends AppCompatActivity
         // Insert the home fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         try {
-            fragmentManager.beginTransaction().replace(R.id.flContent, HungryHome.class.newInstance()).commit();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.addToBackStack(null);
+            transaction.replace(R.id.flContent, HungryHome.class.newInstance()).commit();
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -145,7 +147,9 @@ public class MainActivity extends AppCompatActivity
 
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.flContent, fragment).commit();
 
         // Highlight the selected item, update the title, and close the drawer
         menuItem.setChecked(true);
@@ -245,18 +249,19 @@ public class MainActivity extends AppCompatActivity
         try {
             fragment = (Fragment) fragmentClass.newInstance();
             fragment.setArguments(args);
+            fragment.setRetainInstance(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         transaction = fragmentManager.beginTransaction();
-
+        transaction.replace(replaceID, fragment);
         // add fragment view to back stack if indicated
         if(addToBS) {
-            transaction.addToBackStack(null);
+            transaction.addToBackStack(route);
         }
         // load the fragment
-        transaction.replace(replaceID, fragment).commit();
+        transaction.commit();
     }
 }

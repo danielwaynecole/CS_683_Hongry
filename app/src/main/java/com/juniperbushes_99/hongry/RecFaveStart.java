@@ -63,12 +63,15 @@ public class RecFaveStart extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View inf =  inflater.inflate(R.layout.fragment_rec_fave_start, container, false);
-        loadFavorites(inf);
+        if(savedInstanceState == null){
+            loadFavorites(inf);
+        }
         return inf;
     }
 
     private void loadFavorites(View v){
         recipeFavoritesListView = (ListView) v.findViewById(R.id.recipeFavoritesList);
+
         // open file with recipe favorite json
         String FILENAME = "recipe_favorites";
         StringBuilder json = new StringBuilder();
@@ -127,6 +130,13 @@ public class RecFaveStart extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
+        fm.saveFragmentInstanceState(RecFaveStart.this);
     }
 
     /**
